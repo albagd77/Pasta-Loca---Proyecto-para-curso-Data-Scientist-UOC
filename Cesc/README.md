@@ -1,2 +1,0 @@
-# ProyectoPastaLoca
-Proyecto Pasta Loca
