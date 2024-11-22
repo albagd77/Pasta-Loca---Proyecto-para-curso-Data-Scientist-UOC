@@ -227,11 +227,65 @@ class Manager:
         # cls.add_df(df_cp_Denver ,"df_cp_Denver")
 
         
+        # Normalitzar i deslocalitzar dates
+        date_cols = ['updated_at','moderated_at','reimbursement_date','cash_request_received_date',
+                    'money_back_date','send_at','reco_creation','reco_last_update']
+        for col in date_cols:
+            if col in cr_cp.columns:  # Comprova si la columna existeix
+                cr_cp[col] = pd.to_datetime(cr_cp[col], errors='coerce')  # Normalitza les dates
+                cr_cp[col] = cr_cp[col].dt.tz_localize(None)  # Elimina la informació de zona horària
+        cr_cp['user_id'] = cr_cp['user_id'].fillna(0).astype(int)
+        #cr_cp.info()
+        #display(cr_cp)
+
+        #if 'cash_request_id' not in fe_cp.columns:
+        #    fe_cp['cash_request_id'] = 0  # O un altre valor predeterminat
+        fe_cp['cash_request_id'] = fe_cp['cash_request_id'].fillna(0).astype(int)
+        #fe_cp['cash_request_id'] = fe_cp['cash_request_id'].astype(int)
+
+        # Normalitzar i deslocalitzar dates
+        date_cols = ['created_at','updated_at','paid_at','from_date','to_date']
+        for col in date_cols:
+            if col in fe_cp.columns:  # Comprova si la columna existeix
+                fe_cp[col] = pd.to_datetime(fe_cp[col], errors='coerce')  # Normalitza les dates
+                fe_cp[col] = fe_cp[col].dt.tz_localize(None)  # Elimina la informació de zona horària
+        #fe_cp.info()
+
+        # Verifica duplicats a fe_cp
+        #duplicats_fe_cp = fe_cp[fe_cp.duplicated(subset=['id', 'cash_request_id'], keep=False)]
+        #print(duplicats_fe_cp)
+
+        # Verifica duplicats a cr_cp
+        #duplicats_cr_cp = cr_cp[cr_cp.duplicated(subset=['id'], keep=False)]
+        #print(duplicats_cr_cp)
+
+        #display(fe_cp[['id','cash_request_id']])
+        #df_jo = pd.merge(cr_cp, fe_cp,  on=['id','cash_request_id'], how ="left")
+        df_jo = pd.merge(cr_cp, fe_cp, left_on='id', right_on='cash_request_id', how ="left")
+        #df_jo.info()
+
+        #pm.add(df_jo,"df_jo")
+
+        # Añadir la columna 'active': 1 si deleted_account_id es NaN, de lo contrario 0
+        df_jo['active'] = df_jo['deleted_account_id'].apply(lambda x: 1 if pd.isna(x) else 0)
+
+        # Migrar user_id:
+        # - Para las filas donde deleted_account_id existe, usar "99" + deleted_account_id
+        # - De lo contrario, mantener el user_id original
+        df_jo['user_id'] = df_jo.apply(
+            lambda row: int(f"99{int(row['deleted_account_id'])}") if not pd.isna(row['deleted_account_id']) else row['user_id'],
+            axis=1
+        )
+
+        # Eliminar la columna 'deleted_account_id'
+        cr_new = df_jo.drop(columns=['deleted_account_id'])
+        #display(df_jo)
+
 
         cls.add_df(cr_cp ,"cr_cp")
-        cls.add_df(fe_cp ,"fe_cp")
-        # TODO
-        #cls.add_df(df_jo,"df_jo")        
+        cls.add_df(fe_cp ,"fe_cp")        
+        cls.add_df(cr_new,"df_jo")
+        #print(cr_new.info())        
 
     @classmethod
     def filter_data(cls, df_name, **conditions):
