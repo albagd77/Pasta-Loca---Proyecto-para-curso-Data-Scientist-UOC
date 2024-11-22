@@ -136,3 +136,48 @@ Proyecto Pasta Loca
 
 
 
+
+
+---
+
+## Preparar data Frames: Crear libreria
+
+### Crear columnas:
+
+* FullUserId = user_id | ("99" +"deleted_account_id")
+* Demora: money_back_date - reimbursement_date
+* cash_request_received_date = ??
+
+* TransfType: instant send_at - created_at =? 0
+* TransfType: regular send_at - created_at =? 7 dies
+* ...
+
+### Crear join de los data frames
+
+* Cesc ....
+
+---
+
+## Observaciones:
+
+* Los fees solo se pagan si el dinero es instantaneo o al prorrogar la fecha de devolucion.
+
+### Casos:
+
+*  UsedID 3161, en cash request. 
+ 
+ 
+* CR 18730
+user_id clarificar las dos primeras peticiones, la parece correcta, genera un feed.
+18730
+18730
+18730
+reimbursement_date = 2020-10-24 10:59:56.652+00 coincide con la fecha del feed.
+Vemos clara la peticion ordinaria con 7 dias.
+
+
+* Hipotesis: hay 1 dia de gracia donde no genera feed. Caso CR: 20108
+
+* CR 23354 caso perfecto de "regular" con devolucion correcta y en plazo.
+
+
