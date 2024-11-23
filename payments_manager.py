@@ -204,12 +204,13 @@ class Manager:
         # - Para las filas donde deleted_account_id existe, usar "99" + deleted_account_id
         # - De lo contrario, mantener el user_id original
         df_jo['user_id'] = df_jo.apply(
-            lambda row: int(f"99{int(row['deleted_account_id'])}") if not pd.isna(row['deleted_account_id']) else row['user_id'],
+            lambda row: int(f"{9900000+int(row['deleted_account_id'])}") if not pd.isna(row['deleted_account_id']) else row['user_id'],
             axis=1
         )
         # Eliminar la columna 'deleted_account_id'
         df_jo = df_jo.drop(columns=['deleted_account_id'])
 
+        df_jo.insert(df_jo.columns.get_loc("user_id")+1,"active",df_jo.pop("active"))
 
         fields_actions = ['id_x as id_cr','amount','status_x as stat_cr','created_at_x','user_id','moderated_at: 0=manual 1=auto',
                   'reimbursement_date','cash_request_received_date', 'money_back_date','transfer_type','send_at',
