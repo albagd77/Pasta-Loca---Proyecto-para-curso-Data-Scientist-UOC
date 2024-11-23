@@ -134,6 +134,10 @@ Proyecto Pasta Loca
 
 - **after** : the fee should be charged at the moment of the CR's reimbursement
 
+
+
+
+
 ---
 
 ## Preparar data Frames: Crear libreria
@@ -154,11 +158,11 @@ Proyecto Pasta Loca
 
 ---
 
-#### Observaciones:
+## Observaciones:
 
 * Los fees solo se pagan si el dinero es instantaneo o al prorrogar la fecha de devolucion.
 
-##### Casos:
+### Casos:
 
 *  UsedID 3161, en cash request. 
  

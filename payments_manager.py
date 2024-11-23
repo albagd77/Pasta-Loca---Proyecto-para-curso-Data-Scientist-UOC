@@ -157,6 +157,119 @@ class Manager:
         cr_cp['created_at'] = pd.to_datetime(cr_cp['created_at']) #Normalizar fechas
         cr_cp['created_at'] = cr_cp['created_at'].dt.tz_localize(None)
         cr_cp['Mes_created_at'] = cr_cp['created_at'].dt.to_period('M')
+        
+        # Normalitzar i deslocalitzar dates
+        date_cols = ['updated_at','moderated_at','reimbursement_date','cash_request_received_date',
+                    'money_back_date','send_at','reco_creation','reco_last_update']
+        for col in date_cols:
+            if col in cr_cp.columns:  # Comprova si la columna existeix
+                cr_cp[col] = pd.to_datetime(cr_cp[col], errors='coerce')  # Normalitza les dates
+                cr_cp[col] = cr_cp[col].dt.tz_localize(None)  # Elimina la informació de zona horària
+        cr_cp['user_id'] = cr_cp['user_id'].fillna(0).astype(int)
+        #cr_cp.info()
+        #display(cr_cp)
+
+        #if 'cash_request_id' not in fe_cp.columns:
+        #    fe_cp['cash_request_id'] = 0  # O un altre valor predeterminat
+        fe_cp['cash_request_id'] = fe_cp['cash_request_id'].fillna(0).astype(int)
+        #fe_cp['cash_request_id'] = fe_cp['cash_request_id'].astype(int)
+
+        # Normalitzar i deslocalitzar dates
+        date_cols = ['created_at','updated_at','paid_at','from_date','to_date']
+        for col in date_cols:
+            if col in fe_cp.columns:  # Comprova si la columna existeix
+                fe_cp[col] = pd.to_datetime(fe_cp[col], errors='coerce')  # Normalitza les dates
+                fe_cp[col] = fe_cp[col].dt.tz_localize(None)  # Elimina la informació de zona horària
+        #fe_cp.info()
+
+        # Verifica duplicats a fe_cp
+        #duplicats_fe_cp = fe_cp[fe_cp.duplicated(subset=['id', 'cash_request_id'], keep=False)]
+        #print(duplicats_fe_cp)
+
+        # Verifica duplicats a cr_cp
+        #duplicats_cr_cp = cr_cp[cr_cp.duplicated(subset=['id'], keep=False)]
+        #print(duplicats_cr_cp)
+
+        #display(fe_cp[['id','cash_request_id']])
+        #df_jo = pd.merge(cr_cp, fe_cp,  on=['id','cash_request_id'], how ="left")
+        df_jo = pd.merge(cr_cp, fe_cp, left_on='id', right_on='cash_request_id', how ="left")
+        #df_jo.info()
+
+        #pm.add(df_jo,"df_jo")
+
+        # Añadir la columna 'active': 1 si deleted_account_id es NaN, de lo contrario 0
+        df_jo['active'] = df_jo['deleted_account_id'].apply(lambda x: 1 if pd.isna(x) else 0)
+
+        # Migrar user_id:
+        # - Para las filas donde deleted_account_id existe, usar "99" + deleted_account_id
+        # - De lo contrario, mantener el user_id original
+        df_jo['user_id'] = df_jo.apply(
+            lambda row: int(f"{9900000+int(row['deleted_account_id'])}") if not pd.isna(row['deleted_account_id']) else row['user_id'],
+            axis=1
+        )
+        # Eliminar la columna 'deleted_account_id'
+        df_jo = df_jo.drop(columns=['deleted_account_id'])
+
+        df_jo.insert(df_jo.columns.get_loc("user_id")+1,"active",df_jo.pop("active"))
+
+        fields_actions = ['id_x as id_cr','amount','status_x as stat_cr','created_at_x','user_id','moderated_at: 0=manual 1=auto',
+                  'reimbursement_date','cash_request_received_date', 'money_back_date','transfer_type','send_at',
+                  'recovery_status: 0= null, 1=no, 2=si, etc.','','type','status_y as stat_fe','category','total_amount','paid_at',
+                  'from_date','to_date','charge_moment 0=after, 1=before']
+        
+        df_jo = df_jo.rename(columns={'id_x': 'id_cr'})
+        df_jo = df_jo.rename(columns={'status_x': 'stat_cr'})
+        df_jo = df_jo.rename(columns={'created_at_x': 'created_at'})
+        df_jo = df_jo.rename(columns={'status_y': 'stat_fe'})
+
+        df_jo = df_jo.drop(columns=['updated_at_x'])
+        #df_jo = df_jo.drop(columns=['recovery_status'])
+        df_jo = df_jo.drop(columns=['reco_creation'])
+        df_jo = df_jo.drop(columns=['reco_last_update'])
+        df_jo = df_jo.drop(columns=['id_y'])
+        df_jo = df_jo.drop(columns=['cash_request_id'])
+        df_jo = df_jo.drop(columns=['reason'])
+        df_jo = df_jo.drop(columns=['created_at_y'])
+        df_jo = df_jo.drop(columns=['updated_at_y'])
+
+        '''
+            id_x                        32094 non-null  int64         
+        1   amount                      32094 non-null  float64       
+        2   status_x                    32094 non-null  object        
+        3   created_at_x                32094 non-null  datetime64[ns]
+        4   updated_at_x                32094 non-null  datetime64[ns]
+        5   user_id                     32094 non-null  int64         
+        (pasar de qualitativo a quant.) 6   moderated_at                21530 non-null  datetime64[ns]
+        7   deleted_account_id          2573 non-null   float64       
+        8   reimbursement_date          4061 non-null   datetime64[ns]
+        9   cash_request_received_date  24149 non-null  datetime64[ns]
+        10  money_back_date             17204 non-null  datetime64[ns]
+        11  transfer_type               32094 non-null  object        
+        12  send_at                     22370 non-null  datetime64[ns]
+        
+        13  recovery_status             7200 non-null   object        
+        14  reco_creation               7200 non-null   datetime64[ns]
+        15  reco_last_update            7200 non-null   datetime64[ns]
+        
+        16  (Mes_created_at) calculada  32094 non-null  period[M]     
+        17  id_y                        21057 non-null  float64       
+        18  cash_request_id             21057 non-null  float64       
+        19  type                        21057 non-null  object        
+        20  status_y                    21057 non-null  object        
+        21  category                    2196 non-null   object        
+        22  total_amount                21057 non-null  float64       
+        23  reason                      21057 non-null  object        
+        24  created_at_y                21057 non-null  datetime64[ns]
+        25  updated_at_y                21057 non-null  datetime64[ns]
+        26  paid_at                     15438 non-null  datetime64[ns]
+        27  from_date                   6749 non-null   datetime64[ns]
+        28  to_date                     6512 non-null   datetime64[ns]
+        29  charge_moment   
+        '''
+        cls.add_df(cr_cp ,"cr_cp")
+        cls.add_df(fe_cp ,"fe_cp")        
+        cls.add_df(df_jo,"df_jo")
+        #print(df_jo.info())        
 
 
         # cr_cp = cr_cp.rename(columns={cr_cp.columns[0]: 'Col_0'}) # Primera columna sin titulo, potencialmente eliminable
@@ -225,13 +338,6 @@ class Manager:
         # cls.add_df(df_cp_organic ,"df_cp_organic")
         # cls.add_df(df_cp_conventional ,"df_cp_conventional")
         # cls.add_df(df_cp_Denver ,"df_cp_Denver")
-
-        
-
-        cls.add_df(cr_cp ,"cr_cp")
-        cls.add_df(fe_cp ,"fe_cp")
-        # TODO
-        #cls.add_df(df_jo,"df_jo")        
 
     @classmethod
     def filter_data(cls, df_name, **conditions):
