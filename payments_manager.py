@@ -218,7 +218,6 @@ class Manager:
                   'reimbursement_date','cash_request_received_date', 'money_back_date','transfer_type','send_at',
                   'recovery_status: 0= null, 1=no, 2=si, etc.','','type','status_y as stat_fe','category','total_amount','paid_at',
                   'from_date','to_date','charge_moment 0=after, 1=before']
-        df_jall = df_jo.copy()
 
         # Renombrar
         df_jo = df_jo.rename(columns={'id_x': 'id_cr'})
@@ -229,6 +228,9 @@ class Manager:
 
         # Copiar para mantener compatibilidad
         df_jo['fee'] = df_jo['total_amount']
+
+        df_jall = df_jo.copy()
+        df_jall['id_y'] = df_jall['id_y'].fillna(0).astype(int)
 
         # Eliminar
         df_jo = df_jo.drop(columns=['updated_at_x'])
