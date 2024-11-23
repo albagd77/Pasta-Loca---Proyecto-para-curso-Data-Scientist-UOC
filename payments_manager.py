@@ -194,7 +194,8 @@ class Manager:
 
         #display(fe_cp[['id','cash_request_id']])
         #df_jo = pd.merge(cr_cp, fe_cp,  on=['id','cash_request_id'], how ="left")
-        df_jo = pd.merge(cr_cp, fe_cp, left_on='id', right_on='cash_request_id', how ="left")
+        df_jo = pd.merge(cr_cp, fe_cp, left_on='id', right_on='cash_request_id', how ="left") #inner
+    
         #df_jo.info()
 
         #pm.add(df_jo,"df_jo")
@@ -230,7 +231,9 @@ class Manager:
         df_jo['fee'] = df_jo['total_amount']
 
         df_jall = df_jo.copy()
-        df_jall['id_y'] = df_jall['id_y'].fillna(0).astype(int)
+        df_jall = df_jall.rename(columns={'cash_request_received_date': 'cr_received_date'})
+        
+        #df_jall['id_y'] = df_jall['id_y'].fillna(0).astype(int)
 
         # Eliminar
         df_jo = df_jo.drop(columns=['updated_at_x'])
