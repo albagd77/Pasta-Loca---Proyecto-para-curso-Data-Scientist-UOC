@@ -92,7 +92,7 @@ class Manager:
         :param name: Nombre del DataFrame a obtener.
         :return: DataFrame correspondiente o None si no existe.
         """
-        return cls.dataframes.get(name, None)
+        return cls.dataframes.get(name, None).copy()
 
     @classmethod
     def add_df(cls, dataframe, name):
@@ -218,7 +218,8 @@ class Manager:
                   'reimbursement_date','cash_request_received_date', 'money_back_date','transfer_type','send_at',
                   'recovery_status: 0= null, 1=no, 2=si, etc.','','type','status_y as stat_fe','category','total_amount','paid_at',
                   'from_date','to_date','charge_moment 0=after, 1=before']
-        
+        df_jall = df_jo.copy()
+
         # Renombrar
         df_jo = df_jo.rename(columns={'id_x': 'id_cr'})
         df_jo = df_jo.rename(columns={'status_x': 'stat_cr'})
@@ -277,6 +278,7 @@ class Manager:
         cls.add_df(cr_cp ,"cr_cp")
         cls.add_df(fe_cp ,"fe_cp")        
         cls.add_df(df_jo,"df_jo")
+        cls.add_df(df_jall,"df_jall")
         #print(df_jo.info())        
 
 
