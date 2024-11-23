@@ -204,7 +204,7 @@ class Manager:
         # - Para las filas donde deleted_account_id existe, usar "99" + deleted_account_id
         # - De lo contrario, mantener el user_id original
         df_jo['user_id'] = df_jo.apply(
-            lambda row: int(f"{9900000+int(row['deleted_account_id'])}") if not pd.isna(row['deleted_account_id']) else row['user_id'],
+            lambda row: int(f"{99000000+int(row['deleted_account_id'])}") if not pd.isna(row['deleted_account_id']) else row['user_id'],
             axis=1
         )
         # Eliminar la columna 'deleted_account_id'
@@ -217,11 +217,17 @@ class Manager:
                   'recovery_status: 0= null, 1=no, 2=si, etc.','','type','status_y as stat_fe','category','total_amount','paid_at',
                   'from_date','to_date','charge_moment 0=after, 1=before']
         
+        # Renombrar
         df_jo = df_jo.rename(columns={'id_x': 'id_cr'})
         df_jo = df_jo.rename(columns={'status_x': 'stat_cr'})
         df_jo = df_jo.rename(columns={'created_at_x': 'created_at'})
         df_jo = df_jo.rename(columns={'status_y': 'stat_fe'})
+        df_jo = df_jo.rename(columns={'status_y': 'stat_fe'})
 
+        # Copiar para mantener compatibilidad
+        df_jo['fee'] = df_jo['total_amount']
+
+        # Eliminar
         df_jo = df_jo.drop(columns=['updated_at_x'])
         #df_jo = df_jo.drop(columns=['recovery_status'])
         df_jo = df_jo.drop(columns=['reco_creation'])
