@@ -163,7 +163,8 @@ class Manager:
                     'money_back_date','send_at','reco_creation','reco_last_update']
         for col in date_cols:
             if col in cr_cp.columns:  # Comprova si la columna existeix
-                cr_cp[col] = pd.to_datetime(cr_cp[col], errors='coerce')  # Normalitza les dates
+                # cr_cp[col] = pd.to_datetime(cr_cp[col], errors='coerce')  # Normalitza les dates ## !! aixo descarta dates !!
+                cr_cp[col] = pd.to_datetime(cr_cp[col],format='ISO8601')
                 cr_cp[col] = cr_cp[col].dt.tz_localize(None)  # Elimina la informació de zona horària
         cr_cp['user_id'] = cr_cp['user_id'].fillna(0).astype(int)
         #cr_cp.info()
@@ -178,7 +179,8 @@ class Manager:
         date_cols = ['created_at','updated_at','paid_at','from_date','to_date']
         for col in date_cols:
             if col in fe_cp.columns:  # Comprova si la columna existeix
-                fe_cp[col] = pd.to_datetime(fe_cp[col], errors='coerce')  # Normalitza les dates
+                #fe_cp[col] = pd.to_datetime(fe_cp[col], errors='coerce')  # Normalitza les dates
+                fe_cp[col] = pd.to_datetime(fe_cp[col],format='ISO8601')
                 fe_cp[col] = fe_cp[col].dt.tz_localize(None)  # Elimina la informació de zona horària
         #fe_cp.info()
 
