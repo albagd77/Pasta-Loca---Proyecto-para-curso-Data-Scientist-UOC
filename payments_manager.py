@@ -92,7 +92,7 @@ class Manager:
         :param name: Nombre del DataFrame a obtener.
         :return: DataFrame correspondiente o None si no existe.
         """
-        return cls.dataframes.get(name, None)
+        return cls.dataframes.get(name, None).copy()
 
     @classmethod
     def add_df(cls, dataframe, name):
