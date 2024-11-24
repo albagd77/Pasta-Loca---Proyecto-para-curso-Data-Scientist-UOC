@@ -134,5 +134,10 @@ Proyecto Pasta Loca
 
 - **after** : the fee should be charged at the moment of the CR's reimbursement
 
+# DISCOVERIES AND ASSUMPTIONS
+
+- Segun lo visto en los datos, se observa que se la bbdd de fees comienza con su primer registro el 29/5/2020, 7 meses antes del primer registro de la tabla de CR 01/11/2019. Ademas se observa que la numeracion de los ids de la tabla de fees nos confirma que no hay faltantes de datos, sino que se comenzaron a cobrar los fees 7 meses despues de empezar su operacion de CR. 
+
+
 
 
