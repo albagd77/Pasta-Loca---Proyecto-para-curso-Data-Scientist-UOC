@@ -231,7 +231,8 @@ class Manager:
         df_jo['fee'] = df_jo['total_amount']
 
         df_jall = df_jo.copy()
-        df_jall = df_jall.rename(columns={'cash_request_received_date': 'cr_received_date'})
+        #df_jall = df_jall.rename(columns={'cash_request_received_date': 'cr_received_date'})
+        df_jall['cr_received_date'] = df_jall['cash_request_received_date']
         
         #df_jall['id_y'] = df_jall['id_y'].fillna(0).astype(int)
 
@@ -285,74 +286,6 @@ class Manager:
         cls.add_df(df_jo,"df_jo")
         cls.add_df(df_jall,"df_jall")
         #print(df_jo.info())        
-
-
-        # cr_cp = cr_cp.rename(columns={cr_cp.columns[0]: 'Col_0'}) # Primera columna sin titulo, potencialmente eliminable
-        # cr_cp = cr_cp.rename(columns={'4046': 'Volume_Hass_S'}) # Etiquetas mas descritivas
-        # cr_cp = cr_cp.rename(columns={'4225': 'Volume_Hass_L'})
-        # cr_cp = cr_cp.rename(columns={'4770': 'Volume_Hass_XL'})
-        # cr_cp = cr_cp.drop('Col_0', axis=1) # Parecen IDs del 0 al 52. Eliminable. 
-        # # Col_0 = df_cp['Col_0'].unique()  print(f"Col_0: {Col_0}\n")
-        # cr_cp = cr_cp.reset_index()
-        
-        # # Dataframe normalitzat (df_cp) amb els noms de  columnes simplificats.
-        # df_c = cr_cp.rename(columns={"AveragePrice": "av_price", "Total Volume": "to_volume",
-        #                               "Volume_Hass_S": "vo_S", "Volume_Hass_L": "vo_L", "Volume_Hass_XL": "vo_XL"})
-        # cls.add_df(df_c ,"df_c")
-
-        # df_type = cr_cp.groupby('type')['Total Volume'].count()
-        # df_type = df_type.reset_index()
-        # cls.add_df(df_type,"df_type")
-
-        # regions = cr_cp['region'].unique() 
-        # cls.add_df(regions, "regions")
-
-        # years = cr_cp['year'].unique() 
-        # cls.add_df(years, "years")
-
-        # #df_weekly = df_cp.groupby(pd.Grouper(key='Date', freq='W')).count() # ['AveragePrice'].mean()
-        # #df_weekly = df_weekly.reset_index()
-        # dates = cr_cp['Date'].unique() 
-        # cls.add_df(dates, "dates")
-
-        # cr_cp['region_class']= cr_cp['region'].map(cls.prop_region_classification)
-
-        # df_date_price_volume = cr_cp[['Date', 'region', 'AveragePrice', 'Total Volume']]
-        # df_date_price_volume = df_date_price_volume.reset_index()
-        # df_date_price_volume['Season'] = df_date_price_volume['Date'].apply(cls.get_season)
-        # cls.add_df(df_date_price_volume, "df_date_price_volume")
-
-        # # Para seleccionar unicamente las regiones propias , descartamos Total US para la vista gráfica
-        # cls.add_df(cr_cp[cr_cp.region != 'TotalUS'],"df_cp_cleaned")
-
-        # cls.add_df(cr_cp[cr_cp['region_class']=='City'],"df_city")
-        # cls.add_df(cr_cp[cr_cp['region_class']=='Region'],"df_region")
-
-        # cls.add_df(cr_cp[cr_cp['region_class'].isin(['City','Region'])],"df_city_region")      
-
-        # cls.add_df(cr_cp[cr_cp['region_class']=='GreaterRegion'],"df_greater")
-        # cls.add_df(cr_cp[cr_cp['region_class']=='TotalUS'],"df_totalUS")
-
-        # # Las top 10 regions por Total Volume
-        # cls.add_df(cr_cp.groupby('region')['Total Volume'].sum().nlargest(10).index,"region_largest")
-
-        # # Exemple
-        # df_cp_cleaned=cr_cp[cr_cp.region != 'TotalUS']
-        # df_cp_CA=cr_cp[cr_cp.region == 'California']
-        # df_cp_noCA=cr_cp[(cr_cp.region != 'TotalUS') & (cr_cp.region != "California")]
-        # df_cp_noCA_conventional=cr_cp[(cr_cp.region != 'TotalUS') & (cr_cp.region != "California") & (cr_cp.type=='conventional')]
-        # df_cp_noCA_organic=cr_cp[(cr_cp.region != 'TotalUS') & (cr_cp.region != "California") & (cr_cp.type=='organic')]
-        # df_cp_organic=cr_cp[(cr_cp.region != 'TotalUS') & (cr_cp.type=='organic')]
-        # df_cp_conventional=cr_cp[(cr_cp.region != 'TotalUS') & (cr_cp.type=='conventional')]
-        # df_cp_Denver=cr_cp[cr_cp.region == 'Denver']
-        # cls.add_df(df_cp_cleaned,"df_cp_cleaned")
-        # cls.add_df(df_cp_CA,"df_cp_CA")
-        # cls.add_df(df_cp_noCA,"df_cp_noCA")
-        # cls.add_df(df_cp_noCA_conventional,"df_cp_noCA_conventional")
-        # cls.add_df(df_cp_noCA_organic ,"df_cp_noCA_organic")
-        # cls.add_df(df_cp_organic ,"df_cp_organic")
-        # cls.add_df(df_cp_conventional ,"df_cp_conventional")
-        # cls.add_df(df_cp_Denver ,"df_cp_Denver")
 
     @classmethod
     def filter_data(cls, df_name, **conditions):
