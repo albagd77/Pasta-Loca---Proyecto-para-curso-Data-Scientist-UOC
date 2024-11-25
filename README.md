@@ -12,7 +12,7 @@
 
 ## Diagrama de Flujo del Servicio
 
-(Enlace al diagrama de flujo definitivo)
+![Github](Alejandro/Client%20requests%20CR.png)
 
 ## Métricas para Analizar Rentabilidad Financiera de BP
 
