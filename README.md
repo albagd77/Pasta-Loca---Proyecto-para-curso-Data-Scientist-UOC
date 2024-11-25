@@ -14,6 +14,46 @@
 
 ![Github](Alejandro/Client%20requests%20CR.png)
 
+<<<<<<< HEAD
+## Métricas para Analizar Rentabilidad Financiera de BP
+
+1. **Margen de Ingreso por Fees**:
+    \[
+    \text{Margen de ingreso por fees} = \frac{\text{ingresos por fees de adelanto + ingresos por fees de prorrogas}}{\text{total adelantos}} \times 100
+    \]
+
+2. **Porcentaje de Adelantos con Fee**:
+    \[
+    \text{Porcentaje de adelantos con fee} = \frac{\text{adelantos con fee}}{\text{total adelantos}} \times 100
+    \]
+
+## Métricas para Analizar Comportamiento de Clientes de BP
+
+1. **Porcentaje de Clientes Repetitivos**:
+    \[
+    \text{Porcentaje de clientes repetitivos} = \frac{\text{Clientes repetitivos}}{\text{Total de Clientes}} \times 100
+    \]
+
+2. **Porcentaje de Nuevos Clientes que Pagan Fees**:
+    \[
+    \text{Porcentaje de nuevos clientes que pagan fees} = \frac{\text{Clientes nuevos que pagan fees}}{\text{Total de clientes nuevos}} \times 100
+    \]
+
+3. **Porcentaje de Clientes Repetitivos que Pagan Fees**:
+    \[
+    \text{Porcentaje de clientes repetitivos que pagan fees} = \frac{\text{Clientes repetitivos que pagan fees}}{\text{Total de clientes repetitivos}} \times 100
+    \]
+
+4. **Tasa de Incumplimiento de Nuevos Clientes**:
+    \[
+    \text{Tasa de incumplimiento de nuevos clientes} = \frac{\text{Clientes nuevos que no cumplen el plazo}}{\text{Total de clientes nuevos}} \times 100
+    \]
+
+5. **Tasa de Incumplimiento de Clientes Repetitivos**:
+    \[
+    \text{Tasa de incumplimiento de clientes repetitivos} = \frac{\text{Clientes repetitivos que no cumplen el plazo}}{\text{Total de clientes repetitivos}} \times 100
+    \]
+=======
 # METRICAS PARA ANALIZAR RENTABILIDAD FINANCIERA DE BP
 
 - Margen de ingreso por fees = (ingresos por fees de adelanto + ingresos por fees de prorrogas) / total adelantos * 100
@@ -32,6 +72,7 @@
 
 - Tasa de incumplimiento clientes repetitivos: (Clientes repetitivos que no cumplen el plazo / Total de clientes repetitivos) * 100
 
+>>>>>>> 91a3505f870a503077883b4c8ca4f5a6e3e789f5
 
 ---
 
