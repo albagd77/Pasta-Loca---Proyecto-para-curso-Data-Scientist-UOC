@@ -228,33 +228,7 @@ class Manager:
         df_jo = df_jo.rename(columns={'status_y': 'stat_fe'})
 
         # Copiar para mantener compatibilidad
-        #df_jo['fee'] = df_jo['total_amount']
-        df_jo = df_jo.rename(columns={'total_amount': 'fee'})
-
-        # Tiempo que tarda en recibir el dinero el usuario desde la primera accion.
-        # cr_received_date  (cash_request_received_date) = ??
-        df['to_receive_ini'] = df.cash_request_received_date-df.created_at
-
-        # Tiempo que tarda en recibir el dinero el usuario desde que se envia (demora entre bancos).
-        df['to_receive_bank'] = df.cash_request_received_date-df.send_at
-
-        # Tiempo que la empresa recupera el dinero desde la primera accion.
-        df['to_reimbur'] = df.reimbursement_date-df.created_at
-
-        # Tiempo en el que la emprera realmente ha prestado el dinero
-        df['to_reimbur_cash'] = df.reimbursement_date-df.send_at
-
-        # Tiempo que la empresa presta el dinero.
-        df['to_end'] = df.reimbursement_date-df.money_back_date
-
-        #* Demora:
-        #df['to_delay'] = df.money_back_date-df.reimbursement_date
-
-        # En funcion del tipo instant o regular:
-        # TransfType: instant send_at - created_at =? 0 dias
-        # TransfType: regular send_at - created_at =? 7 dias
-        df['to_send'] = df.send_at-df.created_at
-
+        df_jo['fee'] = df_jo['total_amount']
 
         df_jall = df_jo.copy()
         #df_jall = df_jall.rename(columns={'cash_request_received_date': 'cr_received_date'})
