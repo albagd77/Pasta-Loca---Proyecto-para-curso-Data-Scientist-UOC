@@ -236,6 +236,8 @@ class Manager:
         #df_jo['fee'] = df_jo['total_amount']
         df_jo = df_jo.rename(columns={'total_amount': 'fee'})
         
+        df_jo['Mes_created_at'] = df_jo['created_at'].dt.to_period('M')
+        
 
         # Tiempo que tarda en recibir el dinero el usuario desde la primera accion.
         # cr_received_date  (cash_request_received_date) = ??
