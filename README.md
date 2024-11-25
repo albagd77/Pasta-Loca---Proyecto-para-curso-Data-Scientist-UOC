@@ -1,19 +1,59 @@
-# ProyectoPastaLoca
-Proyecto Pasta Loca
+# Proyecto Pasta Loca
 
-# OBJETIVO DEL PROYECTO
-- Analisis avanzado de insights y cohortes
-- Segmentacion de datos exhaustiva
-- Analizar cohortes de usuarios relevantes (definidads segun el periodo en que realizaron su primer adelanto de efectivo)>Primera "created_at" de cada user_id
+## Objetivo del Proyecto
 
-# ALCANCE DEL PROYECTO
-- Generar modelos de regresión y clasificación para proporcionar a BP tener valiosas perspectivas sobre el comportamiento de los usuarios y el rendimiento de sus servicios financieros.
+- **Análisis avanzado de insights y cohortes**: Estudio detallado del comportamiento de los usuarios a lo largo del tiempo.
+- **Segmentación de datos exhaustiva**: Dividir a los usuarios en grupos con base en el periodo de su primer adelanto.
+- **Análisis de cohortes de usuarios relevantes**: Definidas según el primer "created_at" de cada `user_id`.
 
-# DIAGRAMA DE FLUJO DEL SERVICIO
+## Alcance del Proyecto
 
-(link al diagrama de flujo definitivo)
+- Generar modelos de regresión y clasificación para proporcionar a BP valiosas perspectivas sobre el comportamiento de los usuarios y el rendimiento de sus servicios financieros.
 
+## Diagrama de Flujo del Servicio
 
+![Github](Alejandro/Client%20requests%20CR.png)
+
+<<<<<<< HEAD
+## Métricas para Analizar Rentabilidad Financiera de BP
+
+1. **Margen de Ingreso por Fees**:
+    \[
+    \text{Margen de ingreso por fees} = \frac{\text{ingresos por fees de adelanto + ingresos por fees de prorrogas}}{\text{total adelantos}} \times 100
+    \]
+
+2. **Porcentaje de Adelantos con Fee**:
+    \[
+    \text{Porcentaje de adelantos con fee} = \frac{\text{adelantos con fee}}{\text{total adelantos}} \times 100
+    \]
+
+## Métricas para Analizar Comportamiento de Clientes de BP
+
+1. **Porcentaje de Clientes Repetitivos**:
+    \[
+    \text{Porcentaje de clientes repetitivos} = \frac{\text{Clientes repetitivos}}{\text{Total de Clientes}} \times 100
+    \]
+
+2. **Porcentaje de Nuevos Clientes que Pagan Fees**:
+    \[
+    \text{Porcentaje de nuevos clientes que pagan fees} = \frac{\text{Clientes nuevos que pagan fees}}{\text{Total de clientes nuevos}} \times 100
+    \]
+
+3. **Porcentaje de Clientes Repetitivos que Pagan Fees**:
+    \[
+    \text{Porcentaje de clientes repetitivos que pagan fees} = \frac{\text{Clientes repetitivos que pagan fees}}{\text{Total de clientes repetitivos}} \times 100
+    \]
+
+4. **Tasa de Incumplimiento de Nuevos Clientes**:
+    \[
+    \text{Tasa de incumplimiento de nuevos clientes} = \frac{\text{Clientes nuevos que no cumplen el plazo}}{\text{Total de clientes nuevos}} \times 100
+    \]
+
+5. **Tasa de Incumplimiento de Clientes Repetitivos**:
+    \[
+    \text{Tasa de incumplimiento de clientes repetitivos} = \frac{\text{Clientes repetitivos que no cumplen el plazo}}{\text{Total de clientes repetitivos}} \times 100
+    \]
+=======
 # METRICAS PARA ANALIZAR RENTABILIDAD FINANCIERA DE BP
 
 - Margen de ingreso por fees = (ingresos por fees de adelanto + ingresos por fees de prorrogas) / total adelantos * 100
@@ -32,111 +72,69 @@ Proyecto Pasta Loca
 
 - Tasa de incumplimiento clientes repetitivos: (Clientes repetitivos que no cumplen el plazo / Total de clientes repetitivos) * 100
 
+>>>>>>> 91a3505f870a503077883b4c8ca4f5a6e3e789f5
+
 ---
 
-## Estructura de los datos
+## Estructura de los Datos
 
 ### Cash_Request
 
-#### CR campo: status (23970 regs)
+#### CR Campo: Status (23970 registros)
 
--**money_back** :           (16397) The CR was successfully reimbursed.
+- **money_back**: 16397 registros. El CR fue reembolsado exitosamente.
+- **rejected**: 6568 registros. El CR necesitó una revisión manual y fue rechazado.
+- **direct_debit_rejected**: 831 registros. El intento de débito directo SEPA falló.
+- **active**: 59 registros. Los fondos fueron recibidos en la cuenta del cliente.
+- **transaction_declined**: 48 registros. No se pudo enviar el dinero al cliente.
+- **canceled**: 33 registros. El usuario no confirmó el CR en la app, fue cancelado automáticamente.
+- **direct_debit_sent**: 34 registros. Se envió un débito directo SEPA, pero aún no se confirma el resultado.
 
--**rejected** :             (6568 regs) The CR needed a **manual review** and was rejected.<br/>
+#### CR Campo: Transfer Type
 
--**direct_debit_rejected** :(831 regs) Our last attempt of SEPA direct debit to charge the customer was rejected  <br/>
+- **instant**: El usuario eligió recibir el adelanto instantáneamente.
+- **regular**: El usuario eligió no pagar inmediatamente y esperar la transferencia.
 
--**active** :               (59) Funds were received on the customer account.<br/>
+#### CR Campo: Recovery Status
 
--**transaction_declined** : (48 regs) We failed to send the funds to the customer<br/>
-
--**canceled** :             (33 regs) The user didn't confirm the cash request in-app, we automatically canceled it <br/>
-
--**direct_debit_sent** :    (34 regs) We sent/scheduled a SEPA direct debit to charge the customer account. 
-                            The result of this debit is not yet confirmed<br/>
-
--**(no constan en los datos proporcionados):**
-
--**(approved)** :           CR is a 'regular' one **(= without fees)** and was approved either automatically or manually. 
-                            Funds will be **sent aprox. 7 days after** the creation<br/>
-
--**(money_sent)** :         We transferred the fund to the customer account. 
-                            Will change to **active** once we detect that the user received the funds (using user's bank history)<br/>
-
--**(pending)** :            The CR is **pending a manual review** from an analyst. <br/>
-
--**(waiting_user_confirmation)** : The user needs to confirm in-app that he want the CR (for legal reasons) <br/>
-
--**(waiting_reimbursement)** : We were not able to estimate a date of reimbursement, the user needs to choose one in the app.<br/>
+- **null**: El CR nunca tuvo un incidente de pago.
+- **completed**: El incidente de pago fue resuelto (el CR fue reembolsado).
+- **pending**: El incidente de pago aún está abierto.
+- **pending_direct_debit**: El incidente de pago sigue abierto, pero se ha lanzado un débito directo SEPA.
 
 ---
 
-#### CR campo: transfer_type
-
--**instant** =              user choose not received the advance instantly . <br>
--**regular** =              user choose to not pay and wait for the transfer
-
---
-
-#### CR campo: recovery_status
-
--**null** :                 if the cash request never had a payment incident.<br>
-
--**completed** :            the payment incident was resolved (=the cash request was reimbursed.<br>
-
--**pending** :              the payment incident still open.<br>
-
--**pending_direct_debit** : the payment incident still open but a SEPA direct debit is launched<br>
-
--**cancelled**:             ???
-
-
 ### Fees
 
-#### Fees: type
+#### Fees: Type
 
-- **instant_payment** : fees for instant cash request (send directly after user's request, through SEPA Instant Payment)<br>
+- **instant_payment**: Fees por adelanto instantáneo.
+- **split_payment**: Fees por pago fraccionado (en caso de un incidente).
+- **incident**: Fees por fallos de reembolsos.
+- **postpone**: Fees por la solicitud de posponer un reembolso.
 
-- **split_payment** :   futures fees for split payment (in case of an incident, we'll soon offer the possibility to our 
-                        users to reimburse in multiples installements)<br>
+#### Fees: Status
 
-- **incident** :        fees for failed reimbursement. Created after a failed direct debit <br>
+- **confirmed**: El usuario completó una acción que creó un fee.
+- **rejected**: El último intento de cobrar el fee falló.
+- **cancelled**: El fee fue creado pero cancelado por algún motivo.
+- **accepted**: El fee fue cobrado exitosamente.
 
-- **postpone** :        fees created when a user want to postpone the reimbursment of a CR
+#### Fees: Category
 
+- **rejected_direct_debit**: Fees creados cuando el banco del usuario rechaza el primer débito directo.
+- **month_delay_on_payment**: Fees creados cada mes hasta que el incidente se cierre.
 
+#### Fees: Charge Moment
 
-#### Fees: status (= does the fees was successfully charged): 
+- **before**: El fee se cobra en el momento de su creación.
+- **after**: El fee se cobra cuando el CR es reembolsado.
 
-- **confirmed** :   the user made an action who created a fee. It will normally get charged at the moment of the CR's reimbursement. 
-                    In some rare cases, postpones are confirmed without being charges due to a commercial offer.<br>
+---
 
-- **rejected** :    the last attempt to charge the fee failed.<br>
+## Discoveries and Assumptions
 
-- **cancelled** :   fee was created and cancelled for some reasons. 
-                    It's used to fix issues with fees but it mainly concern postpone fees who failed. 
-                    We are charging the fees at the moment of the postpone request. 
-                    If it failed, the postpone is not accepted and the reimbursement date still the same.<br>
-
-- **accepted** :    fees were successfully charged
-
-
-#### Fees: category (Describe the reason of the incident fee.)  
-
-- **rejected_direct_debit** :   fees created when user's bank rejects the first direct debit<br>
-
-- **month_delay_on_payment** :  fees created every month until the incident is closed
-
-
-#### Fees: charge_moment (When the fee will be charge.)  
-
-- **before** : the fee should be charged at the moment of its creation <br>
-
-- **after** : the fee should be charged at the moment of the CR's reimbursement
-
-# DISCOVERIES AND ASSUMPTIONS
-
-- Segun lo visto en los datos, se observa que se la bbdd de fees comienza con su primer registro el 29/5/2020, 7 meses antes del primer registro de la tabla de CR 01/11/2019. Ademas se observa que la numeracion de los ids de la tabla de fees nos confirma que no hay faltantes de datos, sino que se comenzaron a cobrar los fees 7 meses despues de empezar su operacion de CR. 
+- **Inicio de la BBDD de Fees**: La base de datos de fees comienza con su primer registro el 29/05/2020, siete meses después del primer registro en la tabla de CR (01/11/2019). Esto indica que los fees comenzaron a ser cobrados siete meses después de que se iniciaron las operaciones de los CR. Además, la numeración de los IDs en la tabla de fees confirma que no hay datos faltantes.
 
 
 
