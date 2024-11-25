@@ -14,6 +14,7 @@
 
 ![Github](Alejandro/Client%20requests%20CR.png)
 
+<<<<<<< HEAD
 ## Métricas para Analizar Rentabilidad Financiera de BP
 
 1. **Margen de Ingreso por Fees**:
@@ -52,6 +53,26 @@
     \[
     \text{Tasa de incumplimiento de clientes repetitivos} = \frac{\text{Clientes repetitivos que no cumplen el plazo}}{\text{Total de clientes repetitivos}} \times 100
     \]
+=======
+# METRICAS PARA ANALIZAR RENTABILIDAD FINANCIERA DE BP
+
+- Margen de ingreso por fees = (ingresos por fees de adelanto + ingresos por fees de prorrogas) / total adelantos * 100
+
+- Porcentaje de adelantos con fee = adelantos con fee / total adelantos * 100
+
+# METRICAS PARA ANALIZAR COMPORTAMIENTO DE CLIENTES DE BP
+
+- Porcentaje de clientes repetitivos: Clientes repetitivos / Total de Clientes * 100
+
+- Porcentaje de nuevos clientes que pagan fees=  Clientes nuevos que pagan fees / Total de clientes nuevos * 100
+  
+- Porcentaje de clientes repetitivos que pagan fees=  Clientes repetitivos que pagan fees / Total de clientes repetitivos * 100
+
+- Tasa de incumplimiento nuevos clientes: (Clientes nuevos que no cumplen el plazo / Total de clientes nuevos) * 100
+
+- Tasa de incumplimiento clientes repetitivos: (Clientes repetitivos que no cumplen el plazo / Total de clientes repetitivos) * 100
+
+>>>>>>> 91a3505f870a503077883b4c8ca4f5a6e3e789f5
 
 ---
 

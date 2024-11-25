@@ -215,33 +215,65 @@ class Manager:
 
         df_jo.insert(df_jo.columns.get_loc("user_id")+1,"active",df_jo.pop("active"))
 
-        fields_actions = ['id_x as id_cr','amount','status_x as stat_cr','created_at_x','user_id','moderated_at: 0=manual 1=auto',
-                  'reimbursement_date','cash_request_received_date', 'money_back_date','transfer_type','send_at',
-                  'recovery_status: 0= null, 1=no, 2=si, etc.','','type','status_y as stat_fe','category','total_amount','paid_at',
-                  'from_date','to_date','charge_moment 0=after, 1=before']
+        # fields_actions = ['id_x as id_cr','amount','status_x as stat_cr','created_at_x','user_id','moderated_at: 0=manual 1=auto',
+        #           'reimbursement_date','cash_request_received_date', 'money_back_date','transfer_type','send_at',
+        #           'recovery_status: 0= null, 1=no, 2=si, etc.','','type','status_y as stat_fe','category','total_amount','paid_at',
+        #           'from_date','to_date','charge_moment 0=after, 1=before']
 
         # Renombrar
         df_jo = df_jo.rename(columns={'id_x': 'id_cr'})
+        df_jo = df_jo.rename(columns={'id_y': 'id_fe'})
         df_jo = df_jo.rename(columns={'status_x': 'stat_cr'})
         df_jo = df_jo.rename(columns={'created_at_x': 'created_at'})
         df_jo = df_jo.rename(columns={'status_y': 'stat_fe'})
-        df_jo = df_jo.rename(columns={'status_y': 'stat_fe'})
+        
+        df_jo['id_fe'] = df_jo['id_fe'].fillna(0).astype(int)
 
         # Copiar para mantener compatibilidad
-        df_jo['fee'] = df_jo['total_amount']
+        #df_jall = df_jall.rename(columns={'cash_request_received_date': 'cr_received_date'})
+        df_jo['cr_received_date'] = df_jo['cash_request_received_date']
+
+        #df_jo['fee'] = df_jo['total_amount']
+        df_jo = df_jo.rename(columns={'total_amount': 'fee'})
+        
+        df_jo['Mes_created_at'] = df_jo['created_at'].dt.to_period('M')
+        
+
+        # Tiempo que tarda en recibir el dinero el usuario desde la primera accion.
+        # cr_received_date  (cash_request_received_date) = ??
+        df_jo['to_receive_ini'] = df_jo.cash_request_received_date-df_jo.created_at
+
+        # Tiempo que tarda en recibir el dinero el usuario desde que se envia (demora entre bancos).
+        df_jo['to_receive_bank'] = df_jo.cash_request_received_date-df_jo.send_at
+
+        # Tiempo que la empresa recupera el dinero desde la primera accion.
+        df_jo['to_reimbur'] = df_jo.reimbursement_date-df_jo.created_at
+
+        # Tiempo en el que la emprera realmente ha prestado el dinero
+        df_jo['to_reimbur_cash'] = df_jo.reimbursement_date-df_jo.send_at
+
+        # Tiempo que la empresa presta el dinero.
+        df_jo['to_end'] = df_jo.reimbursement_date-df_jo.money_back_date
+
+        #* Demora:
+        #df['to_delay'] = df_jo.money_back_date-df_jo.reimbursement_date
+
+        # En funcion del tipo instant o regular:
+        # TransfType: instant send_at - created_at =? 0 dias
+        # TransfType: regular send_at - created_at =? 7 dias
+        df_jo['to_send'] = df_jo.send_at-df_jo.created_at
+
 
         df_jall = df_jo.copy()
-        #df_jall = df_jall.rename(columns={'cash_request_received_date': 'cr_received_date'})
-        df_jall['cr_received_date'] = df_jall['cash_request_received_date']
         
-        #df_jall['id_y'] = df_jall['id_y'].fillna(0).astype(int)
+        
 
         # Eliminar
         df_jo = df_jo.drop(columns=['updated_at_x'])
         #df_jo = df_jo.drop(columns=['recovery_status'])
         df_jo = df_jo.drop(columns=['reco_creation'])
         df_jo = df_jo.drop(columns=['reco_last_update'])
-        df_jo = df_jo.drop(columns=['id_y'])
+        #df_jo = df_jo.drop(columns=['id_y'])
         df_jo = df_jo.drop(columns=['cash_request_id'])
         df_jo = df_jo.drop(columns=['reason'])
         df_jo = df_jo.drop(columns=['created_at_y'])
