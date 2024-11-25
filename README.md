@@ -14,44 +14,24 @@
 
 (Enlace al diagrama de flujo definitivo)
 
-## Métricas para Analizar Rentabilidad Financiera de BP
+# METRICAS PARA ANALIZAR RENTABILIDAD FINANCIERA DE BP
 
-1. **Margen de Ingreso por Fees**:
-    \[
-    \text{Margen de ingreso por fees} = \frac{\text{ingresos por fees de adelanto + ingresos por fees de prorrogas}}{\text{total adelantos}} \times 100
-    \]
+- Margen de ingreso por fees = (ingresos por fees de adelanto + ingresos por fees de prorrogas) / total adelantos * 100
 
-2. **Porcentaje de Adelantos con Fee**:
-    \[
-    \text{Porcentaje de adelantos con fee} = \frac{\text{adelantos con fee}}{\text{total adelantos}} \times 100
-    \]
+- Porcentaje de adelantos con fee = adelantos con fee / total adelantos * 100
 
-## Métricas para Analizar Comportamiento de Clientes de BP
+# METRICAS PARA ANALIZAR COMPORTAMIENTO DE CLIENTES DE BP
 
-1. **Porcentaje de Clientes Repetitivos**:
-    \[
-    \text{Porcentaje de clientes repetitivos} = \frac{\text{Clientes repetitivos}}{\text{Total de Clientes}} \times 100
-    \]
+- Porcentaje de clientes repetitivos: Clientes repetitivos / Total de Clientes * 100
 
-2. **Porcentaje de Nuevos Clientes que Pagan Fees**:
-    \[
-    \text{Porcentaje de nuevos clientes que pagan fees} = \frac{\text{Clientes nuevos que pagan fees}}{\text{Total de clientes nuevos}} \times 100
-    \]
+- Porcentaje de nuevos clientes que pagan fees=  Clientes nuevos que pagan fees / Total de clientes nuevos * 100
+  
+- Porcentaje de clientes repetitivos que pagan fees=  Clientes repetitivos que pagan fees / Total de clientes repetitivos * 100
 
-3. **Porcentaje de Clientes Repetitivos que Pagan Fees**:
-    \[
-    \text{Porcentaje de clientes repetitivos que pagan fees} = \frac{\text{Clientes repetitivos que pagan fees}}{\text{Total de clientes repetitivos}} \times 100
-    \]
+- Tasa de incumplimiento nuevos clientes: (Clientes nuevos que no cumplen el plazo / Total de clientes nuevos) * 100
 
-4. **Tasa de Incumplimiento de Nuevos Clientes**:
-    \[
-    \text{Tasa de incumplimiento de nuevos clientes} = \frac{\text{Clientes nuevos que no cumplen el plazo}}{\text{Total de clientes nuevos}} \times 100
-    \]
+- Tasa de incumplimiento clientes repetitivos: (Clientes repetitivos que no cumplen el plazo / Total de clientes repetitivos) * 100
 
-5. **Tasa de Incumplimiento de Clientes Repetitivos**:
-    \[
-    \text{Tasa de incumplimiento de clientes repetitivos} = \frac{\text{Clientes repetitivos que no cumplen el plazo}}{\text{Total de clientes repetitivos}} \times 100
-    \]
 
 ---
 
