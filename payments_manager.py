@@ -167,6 +167,8 @@ class Manager:
                 cr_cp[col] = pd.to_datetime(cr_cp[col],format='ISO8601')
                 cr_cp[col] = cr_cp[col].dt.tz_localize(None)  # Elimina la informació de zona horària
         cr_cp['user_id'] = cr_cp['user_id'].fillna(0).astype(int)
+        cr_cp['recovery_status'] = cr_cp['recovery_status'].fillna('nice').astype(int)
+        
         #cr_cp.info()
         #display(cr_cp)
 
@@ -183,6 +185,29 @@ class Manager:
                 fe_cp[col] = pd.to_datetime(fe_cp[col],format='ISO8601')
                 fe_cp[col] = fe_cp[col].dt.tz_localize(None)  # Elimina la informació de zona horària
         #fe_cp.info()
+
+
+        # Tiempo que tarda en recibir el dinero el usuario desde la primera accion.
+        # cr_received_date  (cash_request_received_date) = ??
+        cr_cp['to_receive_ini'] = cr_cp.cash_request_received_date-cr_cp.created_at
+
+        # Tiempo que tarda en recibir el dinero el usuario desde que se envia (demora entre bancos).
+        cr_cp['to_receive_bank'] = cr_cp.cash_request_received_date-cr_cp.send_at
+
+        # Tiempo que la empresa recupera el dinero desde la primera accion.
+        cr_cp['to_reimbur'] = cr_cp.reimbursement_date-cr_cp.created_at
+
+        # Tiempo en el que la emprera realmente ha prestado el dinero
+        cr_cp['to_reimbur_cash'] = cr_cp.reimbursement_date-cr_cp.send_at
+
+        # Tiempo que la empresa presta el dinero.
+        cr_cp['to_end'] = cr_cp.reimbursement_date-cr_cp.money_back_date
+        # En funcion del tipo instant o regular:
+        # TransfType: instant send_at - created_at =? 0 dias
+        # TransfType: regular send_at - created_at =? 7 dias
+        cr_cp['to_send'] = cr_cp.send_at-cr_cp.created_at
+
+
 
         # Verifica duplicats a fe_cp
         #duplicats_fe_cp = fe_cp[fe_cp.duplicated(subset=['id', 'cash_request_id'], keep=False)]
