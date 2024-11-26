@@ -167,7 +167,7 @@ class Manager:
                 cr_cp[col] = pd.to_datetime(cr_cp[col],format='ISO8601')
                 cr_cp[col] = cr_cp[col].dt.tz_localize(None)  # Elimina la informació de zona horària
         cr_cp['user_id'] = cr_cp['user_id'].fillna(0).astype(int)
-        cr_cp['recovery_status'] = cr_cp['recovery_status'].fillna('nice').astype(int)
+        cr_cp['recovery_status'] = cr_cp['recovery_status'].fillna('nice')#.astype(int)
         
         #cr_cp.info()
         #display(cr_cp)
@@ -276,8 +276,10 @@ class Manager:
 
         # Tiempo en el que la emprera realmente ha prestado el dinero
         df_jo['to_reimbur_cash'] = df_jo.reimbursement_date-df_jo.send_at
-        df_jo['to_reimbur_cash_de'] = (df_jo.reimbursement_date-df_jo.send_at).dt.day()
-        
+        #df_jo['to_reimbur_cash_de'] = (df_jo.reimbursement_date-df_jo.send_at).dt.days()
+        df_jo['to_reimbur_cash_de'] = (df_jo['reimbursement_date'] - df_jo['send_at']).dt.days
+
+
 
         # Tiempo que la empresa presta el dinero.
         df_jo['to_end'] = df_jo.reimbursement_date-df_jo.money_back_date
