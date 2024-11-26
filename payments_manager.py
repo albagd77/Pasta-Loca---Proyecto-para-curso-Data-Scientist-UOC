@@ -167,7 +167,9 @@ class Manager:
                 cr_cp[col] = pd.to_datetime(cr_cp[col],format='ISO8601')
                 cr_cp[col] = cr_cp[col].dt.tz_localize(None)  # Elimina la informació de zona horària
         cr_cp['user_id'] = cr_cp['user_id'].fillna(0).astype(int)
+        
         cr_cp['recovery_status'] = cr_cp['recovery_status'].fillna('nice')#.astype(int)
+        fe_cp['category'] = fe_cp['category'].fillna('nice')#.astype(int)
         
         #cr_cp.info()
         #display(cr_cp)
@@ -250,6 +252,7 @@ class Manager:
         df_jo = df_jo.rename(columns={'id_y': 'id_fe'})
         df_jo = df_jo.rename(columns={'status_x': 'stat_cr'})
         df_jo = df_jo.rename(columns={'created_at_x': 'created_at'})
+        df_jo = df_jo.rename(columns={'created_at_y': 'created_at_fe'})
         df_jo = df_jo.rename(columns={'status_y': 'stat_fe'})
         
         df_jo['id_fe'] = df_jo['id_fe'].fillna(0).astype(int)
@@ -304,8 +307,8 @@ class Manager:
         df_jo = df_jo.drop(columns=['reco_last_update'])
         #df_jo = df_jo.drop(columns=['id_y'])
         df_jo = df_jo.drop(columns=['cash_request_id'])
-        df_jo = df_jo.drop(columns=['reason'])
-        df_jo = df_jo.drop(columns=['created_at_y'])
+        #df_jo = df_jo.drop(columns=['reason'])
+        #df_jo = df_jo.drop(columns=['created_at_y'])
         df_jo = df_jo.drop(columns=['updated_at_y'])
 
         '''
