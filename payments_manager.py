@@ -295,11 +295,8 @@ class Manager:
         # TransfType: regular send_at - created_at =? 7 dias
         df_jo['to_send'] = df_jo.send_at-df_jo.created_at
 
-
         df_jall = df_jo.copy()
-        
-        
-
+            
         # Eliminar
         df_jo = df_jo.drop(columns=['updated_at_x'])
         #df_jo = df_jo.drop(columns=['recovery_status'])
