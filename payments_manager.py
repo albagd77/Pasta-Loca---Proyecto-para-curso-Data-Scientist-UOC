@@ -251,6 +251,8 @@ class Manager:
 
         # Tiempo en el que la emprera realmente ha prestado el dinero
         df_jo['to_reimbur_cash'] = df_jo.reimbursement_date-df_jo.send_at
+        df_jo['to_reimbur_cash_de'] = (df_jo.reimbursement_date-df_jo.send_at).dt.day()
+        
 
         # Tiempo que la empresa presta el dinero.
         df_jo['to_end'] = df_jo.reimbursement_date-df_jo.money_back_date
