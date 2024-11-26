@@ -14,46 +14,6 @@
 
 ![Github](Alejandro/Client%20requests%20CR.png)
 
-<<<<<<< HEAD
-## Métricas para Analizar Rentabilidad Financiera de BP
-
-1. **Margen de Ingreso por Fees**:
-    \[
-    \text{Margen de ingreso por fees} = \frac{\text{ingresos por fees de adelanto + ingresos por fees de prorrogas}}{\text{total adelantos}} \times 100
-    \]
-
-2. **Porcentaje de Adelantos con Fee**:
-    \[
-    \text{Porcentaje de adelantos con fee} = \frac{\text{adelantos con fee}}{\text{total adelantos}} \times 100
-    \]
-
-## Métricas para Analizar Comportamiento de Clientes de BP
-
-1. **Porcentaje de Clientes Repetitivos**:
-    \[
-    \text{Porcentaje de clientes repetitivos} = \frac{\text{Clientes repetitivos}}{\text{Total de Clientes}} \times 100
-    \]
-
-2. **Porcentaje de Nuevos Clientes que Pagan Fees**:
-    \[
-    \text{Porcentaje de nuevos clientes que pagan fees} = \frac{\text{Clientes nuevos que pagan fees}}{\text{Total de clientes nuevos}} \times 100
-    \]
-
-3. **Porcentaje de Clientes Repetitivos que Pagan Fees**:
-    \[
-    \text{Porcentaje de clientes repetitivos que pagan fees} = \frac{\text{Clientes repetitivos que pagan fees}}{\text{Total de clientes repetitivos}} \times 100
-    \]
-
-4. **Tasa de Incumplimiento de Nuevos Clientes**:
-    \[
-    \text{Tasa de incumplimiento de nuevos clientes} = \frac{\text{Clientes nuevos que no cumplen el plazo}}{\text{Total de clientes nuevos}} \times 100
-    \]
-
-5. **Tasa de Incumplimiento de Clientes Repetitivos**:
-    \[
-    \text{Tasa de incumplimiento de clientes repetitivos} = \frac{\text{Clientes repetitivos que no cumplen el plazo}}{\text{Total de clientes repetitivos}} \times 100
-    \]
-=======
 # METRICAS PARA ANALIZAR RENTABILIDAD FINANCIERA DE BP
 
 - Margen de ingreso por fees = (ingresos por fees de adelanto + ingresos por fees de prorrogas) / total adelantos * 100
@@ -72,7 +32,6 @@
 
 - Tasa de incumplimiento clientes repetitivos: (Clientes repetitivos que no cumplen el plazo / Total de clientes repetitivos) * 100
 
->>>>>>> 91a3505f870a503077883b4c8ca4f5a6e3e789f5
 
 ---
 
@@ -136,6 +95,18 @@
 
 - **Inicio de la BBDD de Fees**: La base de datos de fees comienza con su primer registro el 29/05/2020, siete meses después del primer registro en la tabla de CR (01/11/2019). Esto indica que los fees comenzaron a ser cobrados siete meses después de que se iniciaron las operaciones de los CR. Además, la numeración de los IDs en la tabla de fees confirma que no hay datos faltantes.
 
+![Github](Alejandro/adelantosvsfees.png)
 
+En funcion a esto decidimos trabajar para el analisis de rentabilidades con el periodo 06/2020 al 10/2020.
+
+Insights:
+
+Analizando la tasa de cumplimiento de pago de los adelantos vemos que medida que los clientes se fidelizan, la tasa de cumplimiento aumenta
+
+![Github](Alejandro/adelantos_pagos.png)
+
+El mismo comportamiento ocurre si analizamos los fees:
+
+![Github](Alejandro/pagos_fees.png)
 
 
