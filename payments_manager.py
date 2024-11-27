@@ -251,6 +251,7 @@ class Manager:
         df_jo = df_jo.rename(columns={'status_x': 'stat_cr'})
         df_jo = df_jo.rename(columns={'created_at_x': 'created_at'})
         df_jo = df_jo.rename(columns={'status_y': 'stat_fe'})
+        df_jo = df_jo.rename(columns={'created_at_y': 'created_at_fe'})
         
         df_jo['id_fe'] = df_jo['id_fe'].fillna(0).astype(int)
 
@@ -305,7 +306,7 @@ class Manager:
         #df_jo = df_jo.drop(columns=['id_y'])
         df_jo = df_jo.drop(columns=['cash_request_id'])
         df_jo = df_jo.drop(columns=['reason'])
-        df_jo = df_jo.drop(columns=['created_at_y'])
+        #df_jo = df_jo.drop(columns=['created_at_y'])
         df_jo = df_jo.drop(columns=['updated_at_y'])
 
         '''
