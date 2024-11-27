@@ -329,7 +329,8 @@ class Manager:
         order = ['id_cr','id_fe', 'fe_cr_id','user_id', 'created_at','created_at_fe','amount','fee','stat_cr','stat_fe','transfer_type','type',
                 'to_receive_ini', 'to_receive_bank','to_reimbur','to_reimbur_cash','to_end','to_send',
                 'send_at', 'cr_received_date', 'money_back_date', 'reimbursement_date', 'paid_at','charge_moment','moderated_at','reason',
-                'category','from_date','to_date', 'recovery_status','updated_at_x','reco_creation','reco_last_update','updated_at_y'] 
+                'category','from_date','to_date', 'recovery_status','updated_at_x','reco_creation','reco_last_update','updated_at_y',
+                'Mes_created_at','cash_request_received_date'] 
         df_jo= df_jo[order]
 
         df_jall = df_jo.copy()
