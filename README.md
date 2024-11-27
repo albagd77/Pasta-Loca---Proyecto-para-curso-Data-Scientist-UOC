@@ -117,6 +117,12 @@ El equipo detrás de este análisis está compuesto por:
 
 ###  Analysis of Revenue Growth and Fee Behavior:
 
+Antes de proceder al análisis, es importante aclarar los conceptos que estamos utilizando:
+
+- **Total Adelantos**: Se han considerado todos los adelantos que estamos seguros que la empresa ha pagado, es decir, aquellos cuyo `cash_request_received_date` no es nulo, lo que indica que el adelanto fue efectivamente recibido por el cliente.
+  
+- **Total Fees**: Para el análisis de los fees, se han tomado en cuenta aquellos que han sido **efectivamente cobrados**, es decir, aquellos cuyo **status del fee** es **"accepted"**.
+
 El análisis comenzó observando la evolución del índice **% Revenue** en total y por cada servicio.
 
 ![Github](Alejandro/index_inicial.png)
