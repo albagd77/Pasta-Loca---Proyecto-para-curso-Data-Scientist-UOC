@@ -428,4 +428,9 @@ Esto confirma que, aunque el servicio Instant presenta una ligera disminución e
 - **Posicionamiento del Servicio**: Instant se consolidará como la opción principal para nuevos usuarios, fortaleciendo la ventaja competitiva en el mercado.
 
 
+---
 
+### Actualizando el proyecto ...
+
+![alt text](images/image-final.png)
+> Hay una actualización de la libreria en test ...
