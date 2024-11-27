@@ -177,7 +177,7 @@ class Manager:
         
         cr_cp['recovery_status'] = cr_cp['recovery_status'].fillna('nice')#.astype(int)
         fe_cp['category'] = fe_cp['category'].fillna('nice')#.astype(int)
-        
+
         # errors = cr_cp[(cr_cp['created_at']> cr_cp['money_back_date']) | 
         #       (cr_cp['created_at'] > cr_cp['reimbursement_date'])]
 
@@ -235,11 +235,10 @@ class Manager:
 
         #display(fe_cp[['id','cash_request_id']])
         #df_jo = pd.merge(cr_cp, fe_cp,  on=['id','cash_request_id'], how ="left")
-        df_jo = pd.merge(cr_cp, fe_cp, left_on='id', right_on='cash_request_id', how ="left") #inner
-    
+        df_jo = pd.merge(cr_cp, fe_cp, left_on='id', right_on='cash_request_id', how ="left") #inner       
         #df_jo.info()
 
-        #pm.add(df_jo,"df_jo")
+        df_jo['type'] = df_jo['type'].fillna('nice')
 
         # Añadir la columna 'active': 1 si deleted_account_id es NaN, de lo contrario 0
         df_jo['active'] = df_jo['deleted_account_id'].apply(lambda x: 1 if pd.isna(x) else 0)
