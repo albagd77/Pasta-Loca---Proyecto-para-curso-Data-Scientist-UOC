@@ -150,9 +150,12 @@ class Manager:
             print("format_data: El dataset Fees no se ha cargado. Usa el método 'load_data' primero.")
             return None
         
+        
         # Dataframe normalitzat
         cr_cp = cls.get_df("cr").copy()
         fe_cp = cls.get_df("fe").copy()
+        # Eliminem registres que no es corresponen amb CR al buscar id null - (Cash Request)
+        fe_cp = fe_cp.dropna(subset=['cash_request_id'])
 
         cr_cp['created_at'] = pd.to_datetime(cr_cp['created_at']) #Normalizar fechas
         cr_cp['created_at'] = cr_cp['created_at'].dt.tz_localize(None)
@@ -171,6 +174,13 @@ class Manager:
         cr_cp['recovery_status'] = cr_cp['recovery_status'].fillna('nice')#.astype(int)
         fe_cp['category'] = fe_cp['category'].fillna('nice')#.astype(int)
         
+        # errors = cr_cp[(cr_cp['created_at']> cr_cp['money_back_date']) | 
+        #       (cr_cp['created_at'] > cr_cp['reimbursement_date'])]
+
+        cr_cp.drop(cr_cp[cr_cp['created_at'] > cr_cp['money_back_date']].index, inplace=True)
+        cr_cp.drop(cr_cp[cr_cp['created_at'] > cr_cp['reimbursement_date']].index, inplace=True)
+
+
         #cr_cp.info()
         #display(cr_cp)
 
