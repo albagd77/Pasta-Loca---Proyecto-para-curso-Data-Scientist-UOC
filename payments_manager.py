@@ -92,7 +92,11 @@ class Manager:
         :param name: Nombre del DataFrame a obtener.
         :return: DataFrame correspondiente o None si no existe.
         """
-        return cls.dataframes.get(name, None).copy()
+        if cls.dataframes is not None and len(cls.dataframes) >0:
+            return cls.dataframes.get(name, None).copy()
+        else: 
+            cls.__init__()
+            return cls.dataframes.get(name, None).copy()
 
     @classmethod
     def add_df(cls, dataframe, name):
@@ -150,9 +154,12 @@ class Manager:
             print("format_data: El dataset Fees no se ha cargado. Usa el método 'load_data' primero.")
             return None
         
+        
         # Dataframe normalitzat
         cr_cp = cls.get_df("cr").copy()
         fe_cp = cls.get_df("fe").copy()
+        # Eliminem registres que no es corresponen amb CR al buscar id null - (Cash Request)
+        fe_cp = fe_cp.dropna(subset=['cash_request_id'])
 
         cr_cp['created_at'] = pd.to_datetime(cr_cp['created_at']) #Normalizar fechas
         cr_cp['created_at'] = cr_cp['created_at'].dt.tz_localize(None)
@@ -167,8 +174,17 @@ class Manager:
                 cr_cp[col] = pd.to_datetime(cr_cp[col],format='ISO8601')
                 cr_cp[col] = cr_cp[col].dt.tz_localize(None)  # Elimina la informació de zona horària
         cr_cp['user_id'] = cr_cp['user_id'].fillna(0).astype(int)
-        cr_cp['recovery_status'] = cr_cp['recovery_status'].fillna('nice')#.astype(int)
         
+        cr_cp['recovery_status'] = cr_cp['recovery_status'].fillna('nice')#.astype(int)
+        fe_cp['category'] = fe_cp['category'].fillna('nice')#.astype(int)
+
+        # errors = cr_cp[(cr_cp['created_at']> cr_cp['money_back_date']) | 
+        #       (cr_cp['created_at'] > cr_cp['reimbursement_date'])]
+
+        cr_cp.drop(cr_cp[cr_cp['created_at'] > cr_cp['money_back_date']].index, inplace=True)
+        cr_cp.drop(cr_cp[cr_cp['created_at'] > cr_cp['reimbursement_date']].index, inplace=True)
+
+
         #cr_cp.info()
         #display(cr_cp)
 
@@ -219,11 +235,10 @@ class Manager:
 
         #display(fe_cp[['id','cash_request_id']])
         #df_jo = pd.merge(cr_cp, fe_cp,  on=['id','cash_request_id'], how ="left")
-        df_jo = pd.merge(cr_cp, fe_cp, left_on='id', right_on='cash_request_id', how ="left") #inner
-    
+        df_jo = pd.merge(cr_cp, fe_cp, left_on='id', right_on='cash_request_id', how ="left") #inner       
         #df_jo.info()
 
-        #pm.add(df_jo,"df_jo")
+        df_jo['type'] = df_jo['type'].fillna('nice')
 
         # Añadir la columna 'active': 1 si deleted_account_id es NaN, de lo contrario 0
         df_jo['active'] = df_jo['deleted_account_id'].apply(lambda x: 1 if pd.isna(x) else 0)
@@ -248,8 +263,10 @@ class Manager:
         # Renombrar
         df_jo = df_jo.rename(columns={'id_x': 'id_cr'})
         df_jo = df_jo.rename(columns={'id_y': 'id_fe'})
+        df_jo = df_jo.rename(columns={'cash_request_id': 'fe_cr_id'})
         df_jo = df_jo.rename(columns={'status_x': 'stat_cr'})
         df_jo = df_jo.rename(columns={'created_at_x': 'created_at'})
+        df_jo = df_jo.rename(columns={'created_at_y': 'created_at_fe'})
         df_jo = df_jo.rename(columns={'status_y': 'stat_fe'})
         df_jo = df_jo.rename(columns={'created_at_y': 'created_at_fe'})
         
@@ -271,6 +288,8 @@ class Manager:
 
         # Tiempo que tarda en recibir el dinero el usuario desde que se envia (demora entre bancos).
         df_jo['to_receive_bank'] = df_jo.cash_request_received_date-df_jo.send_at
+        # Tiempo en el que el banco tarda a entregar el dinero a la cuenta del cliente(al otro banco),  emprera realmente ha prestado el dinero
+        #df_jo['to_b2b_delay_D'] = (df_jo.cash_request_received_date-df_jo.send_at).dt.days
 
         # Tiempo que la empresa recupera el dinero desde la primera accion.
         df_jo['to_reimbur'] = df_jo.reimbursement_date-df_jo.created_at
@@ -294,18 +313,36 @@ class Manager:
         df_jo['to_send'] = df_jo.send_at-df_jo.created_at
 
 
-        df_jall = df_jo.copy()
-        
-        
+        # Rellenamos datos faltantes
+        df_jo['money_back_date'] = df_jo.apply(
+                    lambda row: row['reimbursement_date'] 
+                    if ( pd.isna(row['money_back_date']) & (row['stat_cr'] == 'money_back') ) 
+                    else row['money_back_date'], axis=1
+                )
+        # Rellenamos datos faltantes
+        df_jo['cr_received_date'] = df_jo.apply(
+            lambda row: row['send_at']+ pd.DateOffset(days=3) 
+            if ( pd.isna(row['cr_received_date']) & (row['stat_cr'] == 'money_back') ) 
+            else row['cr_received_date'], axis=1
+        )
 
+        order = ['id_cr','id_fe', 'fe_cr_id','user_id', 'created_at','created_at_fe','amount','fee','stat_cr','stat_fe','transfer_type','type',
+                'to_receive_ini', 'to_receive_bank','to_reimbur','to_reimbur_cash','to_end','to_send',
+                'send_at', 'cr_received_date', 'money_back_date', 'reimbursement_date', 'paid_at','charge_moment','moderated_at','reason',
+                'category','from_date','to_date', 'recovery_status','updated_at_x','reco_creation','reco_last_update','updated_at_y',
+                'Mes_created_at','cash_request_received_date'] 
+        df_jo= df_jo[order]
+
+        df_jall = df_jo.copy()
+            
         # Eliminar
         df_jo = df_jo.drop(columns=['updated_at_x'])
         #df_jo = df_jo.drop(columns=['recovery_status'])
         df_jo = df_jo.drop(columns=['reco_creation'])
         df_jo = df_jo.drop(columns=['reco_last_update'])
         #df_jo = df_jo.drop(columns=['id_y'])
-        df_jo = df_jo.drop(columns=['cash_request_id'])
-        df_jo = df_jo.drop(columns=['reason'])
+        #df_jo = df_jo.drop(columns=['cash_request_id'])
+        #df_jo = df_jo.drop(columns=['reason'])
         #df_jo = df_jo.drop(columns=['created_at_y'])
         df_jo = df_jo.drop(columns=['updated_at_y'])
 
