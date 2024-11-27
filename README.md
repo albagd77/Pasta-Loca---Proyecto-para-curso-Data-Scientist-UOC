@@ -1,14 +1,15 @@
 # Proyecto Pasta Loca
 
-## Objetivo del Proyecto
+## Equipo del Proyecto
 
-- **Análisis avanzado de insights y cohortes**: Estudio detallado del comportamiento de los usuarios a lo largo del tiempo.
-- **Segmentación de datos exhaustiva**: Dividir a los usuarios en grupos con base en el periodo de su primer adelanto.
-- **Análisis de cohortes de usuarios relevantes**: Definidas según el primer "created_at" de cada `user_id`.
+El equipo detrás de este análisis está compuesto por:
 
-## Alcance del Proyecto
+- **Francesc Pujol Contreras**: *Data Engineer*. Responsable de la limpieza de bases de datos, creación de pipelines de datos y desarrollo de librerías utilizadas por los analistas de datos y de negocio.
+  
+- **Maria Alba Godoy Dominguez**: *Business Analyst - Credit Risk Management*. Encargada del análisis de morosidad y riesgos crediticios, trabajando para reducir la morosidad mediante la identificación de patrones y el desarrollo de estrategias de mitigación.
 
-- Generar modelos de regresión y clasificación para proporcionar a BP valiosas perspectivas sobre el comportamiento de los usuarios y el rendimiento de sus servicios financieros.
+- **Alejandro Manzano**: *Business Analyst - Profitability Analysis*. Enfocado en el análisis de la rentabilidad del negocio, calculando métricas clave para evaluar el rendimiento financiero de los servicios ofrecidos por BP.
+
 
 ## Diagrama de Flujo del Servicio
 
@@ -17,9 +18,9 @@
 
 ## Métricas para Analizar Rentabilidad Financiera de BP
 
-1. **Margen de Ingreso por Fees**:
+1. **% Revenue**:
 ```math
-\text{Margen de ingreso por fees} = \frac{\text{ingresos por fees de adelanto + ingresos por fees de prorrogas}}{\text{total adelantos}} \times 100
+\text{% Revenue} = \frac{\text{ingresos por fees de adelanto + ingresos por fees de prorrogas}}{\text{total adelantos}} \times 100
 ```
 
 2. **Porcentaje de Adelantos con Fee**:
@@ -112,22 +113,71 @@
 
 ---
 
-## Discoveries and Assumptions
+## Profitability Analysis
 
-- **Inicio de la BBDD de Fees**: La base de datos de fees comienza con su primer registro el 29/05/2020, siete meses después del primer registro en la tabla de CR (01/11/2019). Esto indica que los fees comenzaron a ser cobrados siete meses después de que se iniciaron las operaciones de los CR. Además, la numeración de los IDs en la tabla de fees confirma que no hay datos faltantes.
+###  Analysis of Revenue Growth and Fee Behavior:
 
-![Github](Alejandro/adelantosvsfees.png)
+El análisis comenzó observando la evolución del índice **% Revenue** en total y por cada servicio.
 
-En funcion a esto decidimos trabajar para el analisis de rentabilidades con el periodo 06/2020 al 10/2020.
+![Github](Alejandro/index_inicial.png)
 
-Insights:
+Se observa un importante aumento de la rentabilidad del negocio desde 07-2020, alcanzando un incremento del KPI de un **41%** entre 07-2020 y 10-2020.
 
-Analizando la tasa de cumplimiento de pago de los adelantos vemos que medida que los clientes se fidelizan, la tasa de cumplimiento aumenta
+A continuación, analizamos la composición de este KPI para determinar si el aumento se debe a un incremento en el cobro de fees o a una reducción en los montos prestados.
 
-![Github](Alejandro/adelantos_pagos.png)
+![Github](Alejandro/inicial.png)
 
-El mismo comportamiento ocurre si analizamos los fees:
+Entre 07-2020 y 10-2020, vemos que hubo un aumento de los adelantos del **147%**, mientras que los fees crecieron un **500%**.
 
-![Github](Alejandro/pagos_fees.png)
+Con esta información, pasamos a analizar más detalladamente el comportamiento de los fees.
+
+![Github](Alejandro/fees_evolution.png)
+
+En esta gráfica, podemos ver claramente que el crecimiento exponencial de los fees se debe al éxito del servicio **Instant**.
+
+A continuación, nos centramos en el servicio **Instant** para analizar los diferentes sub-servicios ofrecidos, específicamente las dos opciones de pago de fees: **before** y **after**.
+
+![Github](Alejandro/charge_moment.png)
+
+El **82%** de los **CR** de **Instant Payment** utilizan el sub-servicio **after**. Al observar la evolución en el tiempo, vemos una tendencia creciente en ambos sub-servicios, sin que haya una transferencia significativa de uno a otro. Lo que sí se observa es un aumento más pronunciado en el servicio **after**.
+
+![Github](Alejandro/charge_moment_time.png)
+
+A continuación, analizamos la morosidad en cada uno de estos dos sub-servicios, con la hipótesis de que el servicio **"after"** podría ser más susceptible a la morosidad. Sin embargo, sorprendentemente encontramos lo contrario:
+
+![Github](Alejandro/charge_moment_analysis.png)
+
+Como se puede ver, la tasa de impagos del sub-servicio **"charge moment"** en el servicio **Instant** es mayor para los clientes que pagan **before** que para los que pagan **after**. Dado que el sub-servicio **before** representa solo el **20%**, podemos proponer nuestro primer plan de acción:
+
+### PLAN DE ACCIÓN:
+**Eliminar el subservicio "charge moment" del servicio Instant.**
+
+### IMPACTO:
+- **Morosidad general ponderada con ambos servicios** = **28,4%**.
+- **Eliminando el subservicio "before"** reduciría la morosidad general ponderada solo con **after** a **25%**, lo que representaría una reducción del **3%** en la morosidad.
 
 
+### **Cohortes: Segmentaciones para analisis
+
+Hemos realizado un análisis de cohortes basado en la fecha de la primera solicitud de adelanto. Para este análisis, tomamos las siguientes asunciones clave:
+
+1. Se consideran **solo los fees pagados**.
+2. Se consideran **solo adelantos con certeza de haber sido pagados por BP** (es decir, aquellos con el campo `cash_request_received_date` no nulo).
+
+![Diagrama de Cohortes](Alejandro/cohort_index.png)
+
+Al observar la **primera diagonal** del gráfico, podemos ver el **porcentaje de ingresos** para cada cohorte respecto a su primera solicitud de adelanto de efectivo. Es evidente que este valor aumenta con el tiempo, especialmente antes del **boom del servicio Instant**, periodo en el que se acentúa este crecimiento.
+
+Este aumento en el índice se debe al auge del servicio **Instant**, por lo que realizamos una cohorte provisional para segmentar a los usuarios en tres grupos:
+
+1. **Usuarios 100% Instant**
+2. **Usuarios 100% Regular**
+3. **Usuarios Mixtos**
+
+A continuación, presentamos la evolución de estos grupos a lo largo del tiempo:
+
+![Evolución de las Cohortes](Alejandro/provisionary_cohorts.png)
+
+En este gráfico, observamos la evolución de cada grupo de usuarios. El **naranja** representa a los usuarios que migraron de "regular" a "instant", un cambio significativo. El **verde** muestra a aquellos que se han mantenido en el servicio **regular**, y el **azul** destaca a los usuarios **100% Instant**.
+
+Se puede ver claramente el crecimiento **exponencial** de los usuarios 100% Instant, lo que refleja el impacto que este servicio ha tenido en el comportamiento de los clientes.
