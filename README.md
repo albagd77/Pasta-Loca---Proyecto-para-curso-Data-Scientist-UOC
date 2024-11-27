@@ -210,10 +210,35 @@ A continuación, presentamos la comparación de los clientes principales de los 
 ---
 
 #### **Observaciones Finales**
-A partir del análisis de estos tres segmentos:
+A partir del análisis de estos tres segmentos, podemos destacar los siguientes puntos clave:
 
-- Aunque ha habido una **gran migración positiva** de usuarios del servicio regular al servicio mixto, aún existe un grupo que **prefiere mantenerse en el servicio regular**. Esto probablemente se debe a que no necesitan la inmediatez del crédito a cambio de un fee.
-- Existe una **diferencia significativa en el comportamiento de los nuevos clientes**: aquellos que optan por el servicio Instant desde el inicio tienen un rendimiento mucho mayor en términos de ingresos y engagement.
+- Aunque ha habido una **gran migración positiva** de usuarios del servicio regular al servicio mixto, aún existe un grupo que **prefiere mantenerse en el servicio regular**. Este comportamiento probablemente se debe a que estos usuarios no perciben la necesidad de la **inmediatez del crédito** que ofrece el servicio Instant, prefiriendo no pagar el fee adicional.
+  
+- Existe una **diferencia significativa en el comportamiento de los nuevos clientes**: aquellos que optan por el servicio Instant desde el inicio tienen un rendimiento **mucho mayor** en términos de ingresos y engagement, mostrando una preferencia clara por la rapidez y la accesibilidad.
+
+Si analizamos las tasas de retención (retention rate) por cohortes de la **primera solicitud de crédito** entre los usuarios del servicio regular y los usuarios del servicio Instant, observamos lo siguiente:
+
+---
+
+### **Tasas de Retención por Cohorte**
+
+- **Retención de Usuarios del Servicio Regular**
+
+  ![Retention rate regular](Alejandro/retention_rate_regular.png)
+
+- **Retención de Usuarios del Servicio Instant**
+
+  ![Retention rate Instant](Alejandro/retention_rate_instant.png)
+
+---
+
+Al interpretar estos gráficos, es importante considerar lo siguiente:
+
+- En el gráfico de **retención de usuarios del servicio regular**, observamos que **antes del lanzamiento de Instant (07-2020)**, las tasas de retención eran aproximadamente del **45%**, lo que indica un comportamiento más estable y constante en ese segmento.
+  
+- En el gráfico de **retención de usuarios Instant**, las tasas de retención son ligeramente más bajas, rondando el **40%**, pero este grupo tiene un **índice mucho más alto de adquisición de nuevos clientes**, lo que compensa la menor tasa de retención. Esto refleja la **alta atracción** del servicio Instant, aunque con una ligera disminución en la retención a largo plazo.
+
+Esto confirma que, aunque el servicio Instant presenta una ligera disminución en la retención, su capacidad de atraer nuevos clientes y generar un mayor ingreso por cliente es clave para el crecimiento a largo plazo del negocio.
 
 ---
 
