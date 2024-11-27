@@ -170,7 +170,7 @@ El equipo detrás de este análisis está compuesto por:
 * pending : the payment incident still open
 * pending_direct_debit : the payment incident still open but a SEPA direct debit is launched
 
-![alt text](image.png)
+![alt text](images/image.png)
 
 
 ### Distribución del campo category en Fees (incidencias en Fees):
