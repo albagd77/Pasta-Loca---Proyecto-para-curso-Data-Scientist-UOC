@@ -264,7 +264,15 @@ df_jo['cr_received_date'] = df_jo.apply(
 
 ### Analisis de Series Temporales y Ruido asociado
 
+### Cash Request created_at / amount
+
 ![alt text](images/image-14.png)
+
+![alt text](images/image-15.png)
+> Se aprecia un descenso de importe medio solicitado a lo largo del periodo.
+
+![alt text](images/image-16.png) 
+
 > Se aprecia un aspecto semanal de los datos al ver la evolucion a lo largo del periodo.
 ---
 
