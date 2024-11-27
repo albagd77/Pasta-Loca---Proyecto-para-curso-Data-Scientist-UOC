@@ -4,11 +4,11 @@
 
 El equipo detrás de este análisis está compuesto por:
 
-- **Francesc Pujol Contreras**: *Data Engineer*. Responsable de la limpieza de bases de datos, creación de pipelines de datos y desarrollo de librerías utilizadas por los analistas de datos y de negocio.
+- **Francesc Pujol Contreras**: *Data Engineer*. Responsable de la limpieza de bases de datos, creación de pipelines de datos y desarrollo de librerías utilizadas por los analistas.
   
-- **Maria Alba Godoy Dominguez**: *Business Analyst - Credit Risk Management*. Encargada del análisis de morosidad y riesgos crediticios, trabajando para reducir la morosidad mediante la identificación de patrones y el desarrollo de estrategias de mitigación.
+- **Maria Alba Godoy Dominguez**: *Business Analyst - Credit Risk Management*. Encargada del análisis de morosidad y riesgos crediticios.
 
-- **Alejandro Manzano**: *Business Analyst - Profitability Analysis*. Enfocado en el análisis de la rentabilidad del negocio, calculando métricas clave para evaluar el rendimiento financiero de los servicios ofrecidos por BP.
+- **Alejandro Manzano**: *Business Analyst - Profitability Analysis*. Enfocado en el análisis de la rentabilidad del negocio.
 
 
 ## Diagrama de Flujo del Servicio
@@ -157,12 +157,16 @@ Como se puede ver, la tasa de impagos del sub-servicio **"charge moment"** en el
 - **Eliminando el subservicio "before"** reduciría la morosidad general ponderada solo con **after** a **25%**, lo que representaría una reducción del **3%** en la morosidad.
 
 
-### **Cohortes: Segmentaciones para analisis
+# **Cohortes: Segmentaciones para Análisis**
 
 Hemos realizado un análisis de cohortes basado en la fecha de la primera solicitud de adelanto. Para este análisis, tomamos las siguientes asunciones clave:
 
 1. Se consideran **solo los fees pagados**.
 2. Se consideran **solo adelantos con certeza de haber sido pagados por BP** (es decir, aquellos con el campo `cash_request_received_date` no nulo).
+
+---
+
+### **Diagrama de Cohortes**
 
 ![Diagrama de Cohortes](Alejandro/cohort_index.png)
 
@@ -174,10 +178,61 @@ Este aumento en el índice se debe al auge del servicio **Instant**, por lo que 
 2. **Usuarios 100% Regular**
 3. **Usuarios Mixtos**
 
-A continuación, presentamos la evolución de estos grupos a lo largo del tiempo:
+---
+
+### **Evolución de las Cohortes**
 
 ![Evolución de las Cohortes](Alejandro/provisionary_cohorts.png)
 
-En este gráfico, observamos la evolución de cada grupo de usuarios. El **naranja** representa a los usuarios que migraron de "regular" a "instant", un cambio significativo. El **verde** muestra a aquellos que se han mantenido en el servicio **regular**, y el **azul** destaca a los usuarios **100% Instant**.
+En este gráfico, observamos la evolución de cada grupo de usuarios:
+
+- El **naranja** representa a los usuarios que migraron de "regular" a "instant", un cambio significativo.  
+- El **verde** muestra a aquellos que se han mantenido en el servicio **regular**.  
+- El **azul** destaca a los usuarios **100% Instant**.  
 
 Se puede ver claramente el crecimiento **exponencial** de los usuarios 100% Instant, lo que refleja el impacto que este servicio ha tenido en el comportamiento de los clientes.
+
+---
+
+### **Análisis de los Top Clientes por Segmento**
+
+A continuación, presentamos la comparación de los clientes principales de los tres segmentos:
+
+- **Usuarios 100% Instant**  
+  ![Clientes Top Instant](Alejandro/top_instant.png)
+
+- **Usuarios 100% Regular**  
+  ![Clientes Top Regular](Alejandro/top_regular.png)
+
+- **Usuarios Mixtos**  
+  ![Clientes Top Mixtos](Alejandro/top_mixed.png)
+
+---
+
+#### **Observaciones Finales**
+A partir del análisis de estos tres segmentos:
+
+- Aunque ha habido una **gran migración positiva** de usuarios del servicio regular al servicio mixto, aún existe un grupo que **prefiere mantenerse en el servicio regular**. Esto probablemente se debe a que no necesitan la inmediatez del crédito a cambio de un fee.
+- Existe una **diferencia significativa en el comportamiento de los nuevos clientes**: aquellos que optan por el servicio Instant desde el inicio tienen un rendimiento mucho mayor en términos de ingresos y engagement.
+
+---
+
+### **Plan de Acción**
+
+- **Iniciativa**: Invertir todos los esfuerzos en captar nuevos clientes que elijan el servicio Instant desde su primera solicitud.  
+
+#### **Estrategia Comercial Específica**
+- **Campañas de Marketing Dirigidas**: Lanzar campañas promocionales que destaquen los beneficios del servicio Instant, como la rapidez y conveniencia, utilizando canales digitales como redes sociales y correo electrónico.
+- **Incentivos para Nuevos Usuarios**: Ofrecer un descuento en la primera solicitud del servicio Instant para motivar la adopción inicial.
+- **Educación del Usuario**: Implementar comunicaciones claras en la aplicación y el sitio web que comparen visualmente los beneficios del servicio Instant frente al servicio regular.
+- **Partnerships Estratégicos**: Colaborar con aplicaciones de finanzas personales o wallets digitales para integrar el servicio Instant y acceder a un público nuevo.
+
+#### **Impacto Esperado**
+- **Incremento en el Margen de Ingresos por Fees**: Gracias a un mayor engagement de los usuarios Instant.
+- **Reducción de Costos**: Menor mantenimiento operativo para usuarios del servicio regular.
+- **Mayor Retención**: Usuarios que adoptan el servicio Instant tienden a mostrar mayor fidelidad.
+- **Posicionamiento del Servicio**: Instant se consolidará como la opción principal para nuevos usuarios, fortaleciendo la ventaja competitiva en el mercado.
+
+
+
+
