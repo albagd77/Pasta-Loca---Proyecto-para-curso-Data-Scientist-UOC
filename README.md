@@ -553,3 +553,11 @@ Como mejora integral para BP, el conjunto de insights proporcionados en todo est
 
 Esperamos seguir siendo su aliado estratégico en futuros análisis de datos, contribuyendo al crecimiento sostenible de su empresa y fortaleciendo la gestión eficiente de sus operaciones y riesgos.
 
+
+
+---
+
+### Actualizando el proyecto ...
+
+![alt text](images/image-final.png)
+> Hay una actualización de la libreria en test ...
