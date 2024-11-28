@@ -265,5 +265,129 @@ Esto confirma que, aunque el servicio Instant presenta una ligera disminución e
 - **Posicionamiento del Servicio**: Instant se consolidará como la opción principal para nuevos usuarios, fortaleciendo la ventaja competitiva en el mercado.
 
 
+---
+
+## Credit Risk Management
+
+###  Analysis of debts and credit risk:
+
+Antes de proceder al análisis, es importante aclarar los conceptos que estamos utilizando:
+
+- **Total Adelantos**: como hemos descrito en el Profitability Analysis .
+  
+- **Adelantos no reembolsados**: Tomamos todos aquellos CR que tienen `cash_request_received_data` y además el estado no es `money_back`ni tampoco `active`.
+
+- **Total Fees**: como hemos descrito en el Profitability Analysis.
+
+- **Fees no pagados**: Tomamos el total de fees como en Profitability Analysis y le restamos los Fees pagados para evitar colisiones con las cancelled.
 
 
+El análisis comenzó con el estudio de las cantidades de dinero que se deben a la empresa. Así, se observó la evolución de los CR no reembolsados y las Fees no pagadas en contraste con el total de cada una.
+
+![Evolución de las CR y Fees según deben o no](Alba/image-1.png)
+
+Se observa un importante aumento de la morosidad en CR a partir de 2020-05 que toma su máximo en 2020-07 y se estabiliza.
+
+También se puede ver en Fees que el volumen de confirmadas es poco relevante. En cuanto a las Fees fallidas (suma de las `rejected`y `cancelled`) empiezan a emerger lógicamente en 2020-05 pero es en 2020-06 que suben significativamente y aumentan con un cambio importante de crecimiento en 2020-10.
+
+A continuación, analizamos la morosidad desde el punto de vista temporal, es decir según el número de días que un usuario es moroso.
+
+- **Fecha del debt**: calculamos la fecha del debt desde el momento en que el usuario recibe el dinero con la `cash_request_received_date`. 
+
+- **Morosos**: Consideramos morosos a los usuarios que NO tienen el `status`como 'money_back' y que tardan a devolver el adelanto más de los 29 días de media para el `reimbursement_date` que previamente habíamos encontrado.
+
+![Tabla morosos](Alba/usuarios_por_rangos2.png)
+
+El análisis de los datos muestra que la mayoría de los usuarios tienen una morosidad moderada, con un número importante de ellos en los primeros 90 días. Sin embargo, un segmento crítico de usuarios tiene una morosidad prolongada, especialmente aquellos con más de 180 días de atraso. 
+
+Estos usuarios representan un alto riesgo para la empresa y podrían estar involucrados en comportamientos fraudulentos o simplemente en situaciones donde no tienen la intención de pagar.
+
+![Morosidad](Alba/image-5.png)
+
+Para descartar, se comprueba el número de `user_id` que estan en cancelados. Se encuentran 2 de estos usuarios de morosidad prolongada tienen el usuario cancelado.
+
+
+### PLAN DE ACCIÓN
+
+#### Acciones recomendadas para abordar el problema:
+1. **Evaluación de riesgo:** Implementar un análisis de riesgo más detallado para estos usuarios su historial crediticio o el análisis de sus transacciones en la plataforma. Esto ayudará a determinar si son casos de fraude o simplemente problemas financieros.
+
+2. **Incentivos para pago anticipado:** Para los 251 usuarios con morosidad de 91-180 días, ofrecer incentivos como descuentos por pronto pago o podría ayudar a reducir el atraso. Estas acciones no solo podrían reducir la morosidad, sino que también pueden mejorar la relación con los usuarios.
+
+3. **Condiciones más estrictas para usuarios con morosidad previa:** Los usuarios que ya han mostrado antecedentes de morosidad podrían estar sujetos a condiciones más estrictas, como límites de crédito más bajos o mayores requisitos para acceder a adelantos. Es necesario recopilar esa información para poder evitar estos casos mejor. 
+
+#### Indicadores clave a monitorear:
+
+- **Tasa de recuperación:** Monitorear la tasa de recuperación de deudas, especialmente de los usuarios con más de 180 días de morosidad, para evaluar la efectividad de las acciones de cobranza.
+
+- **Evolución de la morosidad**: Observar cómo evoluciona la morosidad en cada segmento (0-30, 31-90, 91-180, >180 días) para identificar tendencias y ajustar las estrategias de manera proactiva.
+
+
+# **Cohortes: Segmentaciones para Análisis**
+
+Hemos realizado un análisis de cohortes basado en las cantidades de CR y Fees que no han sido pagadas todavía. Para este análisis, tomamos las siguientes asunciones clave:
+
+1. Se consideran **los fees no pagados** como la resta de las `total_fee` menos las `paid_fee`.
+2. Se consideran **solo los adelantos de los que no tenemos certeza de haber sido reembolsados a BP** (es decir, aquellos que no son ni `money_back` ni `active`).
+
+---
+
+### **Diagrama de Cohortes para las CR no pagadas**
+
+![Cohorte CR](Alba\image-6.png)
+
+En el diagrama podemos observar que los porcentages de CR no reembolsados según cohortes. Nos fijamos en la segunda diagonal dado que tienen un mes de margen (los 29 días de media encontrados) y en ese periodo todavía no pueden considerarse técnicamente morosos.
+
+Tasas relativamente bajas a excepción para las cohortes de 2019-11 a 2020-03 pero en aumento (no constante) para las siguientes cohortes. 
+
+Estudiamos la cohorte del 2020-04 por sus altos valores en meses subsiguientes.
+
+![Cohorte CR 2020-04](Alba\image-4.png)
+
+Donde observamos que el peor usuario tiene dos CR de 100 pendientes de pago. Cosa que tampoco nos parece crítica. Pero si confirma la necesidad de tomar acción en el rastreo de usuarios reincidentes en los impagos para poder rebajar su impacto.
+
+Hacemos lo mismo con la Cohorte del 2020-07 para ver qué nos dicen índices tan altos.
+
+![Cohorte CR 2020-07](Alba\image-7.png)
+
+El peor usuario no destaca de entre los 10 primeros sino que todos son usuarios con deuda para un adelanto de 100. De lo cual concluimos que el porcentaje alto se deriva de muchos usuarios que no han pagado su deuda todavía y no de usuarios concretos con varias deudas.
+
+### PLAN DE ACCIÓN
+
+#### Acciones recomendadas para abordar el problema:
+
+1. *Acciones Preventivas (Antes de Julio y Agosto)*
+
+  -  Recordatoris anticipados que incluyan campañas de comunicación previa a la fecha de vencimiento.
+
+  - Incentivos para pagos tempranos, como descuentos, recompensas, puntos o bonificaciones para los que cancelen sus deudas antes del vencimiento en ese periodo estival.
+
+
+2. *Acciones Correctivas (Durante Julio y Agosto)*
+
+  - Monitoreo en tiempo real (diario) para identificar usuarios que están a punto de incumplir y actuar preventivamente.
+
+3. *Acciones a Largo plazo (Después Julio y Agosto)
+
+  - Seguir analizando el comportamiento moroso en esos periodos para saber si es estacional (por las vacaciones) o económico (debido a situaciones globales de crisi por ejemplo, como la COVID-19).
+
+  - Estudiar la posibilidad de crear perfiles de riesgo basado en el comportamiento de este periodo. Morosos recurrentes, que por ejemplo requieren mayor control, y morosos ocasionales que podrían beneficiarse con incentivos y flexibilización (para tratar de fidelizarlos y que se vuelvan puntuales).
+
+
+### **Diagrama de Cohortes para las Fees no pagadas**
+
+![Cohorte Fees no pagadas](Alba\image-3.png)
+
+De nuevo la Cohorte del 2020-04 despunta por su alto impago. 
+También destaca en comparación con las demás la cohorte 2019-12. Estos usuarios empezaron a usar BP cuando todavía no cobraban fees y podría ser motivo de alto impago al empezar a implementarse las fees.
+
+
+
+- **Recomendación sobre Fees:**
+Teniendo en cuenta que el beneficio de BP proviene íntegramente de los Fees que se pagan es vital implementar acciones para asegurarse el pago de las fees.
+
+La personalización en todo el proceso de petición de adelanto de dinero puede mejorar las tasas de recuperación y la relación con el cliente.
+
+Como mejora integral para BP, el conjunto de insights proporcionados en todo este Análisis como combinar estrategias preventivas, estrategias comerciales específica, eliminación del charge_moment para el servicio Instant...permitirá reducir la tasa de impagos, fortalecer la relación con los clientes, atraer nuevos usuarios y mejorar la eficiencia operativa. 
+
+Esperamos seguir siendo su aliado estratégico en futuros análisis de datos, contribuyendo al crecimiento sostenible de su empresa y fortaleciendo la gestión eficiente de sus operaciones y riesgos.
